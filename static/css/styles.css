@@ -63,11 +63,28 @@ button:hover {
 
 #game-over {
     margin-top: 20px;
-    display: none; /* Default hidden */
+    display: none; /* Hidden by default */
+    text-align: center;
 }
 
 #game-over-message {
     font-size: 18px;
     color: #555;
     margin-bottom: 20px;
+}
+
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: 'Roboto Mono', monospace;
+    background-color: #37A908;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2e7a06;
 }

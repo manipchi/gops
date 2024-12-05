@@ -141,9 +141,5 @@ def on_disconnect():
                 del games[room]
                 break
 
-
-
-
-
 if __name__ == '__main__':
     socketio.run(app)
