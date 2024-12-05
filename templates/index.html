@@ -1,0 +1,31 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Goofspiel Online</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div id="game-container">
+        <h1>Goofspiel Online</h1>
+        <div id="join-game">
+            <input type="text" id="username" placeholder="Enter your username">
+            <input type="text" id="room" placeholder="Enter room name">
+            <button id="join-btn">Join Game</button>
+            <p id="waiting-message"></p>
+        </div>
+        <div id="game" style="display: none;">
+            <p id="prize-card">Prize Card: </p>
+            <p id="accumulated-prizes">Accumulated Prizes: </p>
+            <p id="your-hand">Your Hand: </p>
+            <div id="hand-cards"></div>
+            <p id="round-info"></p>
+            <p id="scores"></p>
+        </div>
+    </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
