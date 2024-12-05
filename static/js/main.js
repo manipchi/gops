@@ -35,6 +35,7 @@ socket.on('update_hand', (data) => {
         btn.dataset.cardValue = card_to_value(card);
         btn.classList.add('card-button');
         btn.addEventListener('click', () => {
+            highlightSelectedCard(btn);
             socket.emit('select_card', { username: username, card: btn.dataset.cardValue });
         });
         handDiv.appendChild(btn);
@@ -42,6 +43,15 @@ socket.on('update_hand', (data) => {
 
     document.getElementById('your-hand').innerText = 'Your Hand:';
 });
+
+// Highlight selected card
+function highlightSelectedCard(selectedBtn) {
+    const buttons = document.querySelectorAll('#hand-cards button');
+    buttons.forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    selectedBtn.classList.add('selected');
+}
 
 socket.on('update_prize', (data) => {
     document.getElementById('prize-card').innerText = `Prize Card: ${data.prize_card}`;
