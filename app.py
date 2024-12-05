@@ -23,6 +23,11 @@ def on_join(data):
     username = data['username']
     sid = request.sid  # Get the session ID of the player
 
+    if waiting_player and waiting_player['sid'] == sid:
+        # Prevent matching a player to themselves
+        emit('error', {'message': 'You cannot join a game against yourself.'}, to=sid)
+        return
+
     if waiting_player is None:
         # No players are waiting, so this player waits
         waiting_player = {'username': username, 'sid': sid}
@@ -58,6 +63,7 @@ def on_join(data):
         prize_card = game.next_prize_card()
         accumulated_prizes = game.get_accumulated_prizes_display()
         socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
+
 
 
 @socketio.on('select_card')

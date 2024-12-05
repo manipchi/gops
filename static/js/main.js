@@ -62,11 +62,13 @@ socket.on('update_prize', (data) => {
     }
 });
 
-// Display round result
 socket.on('round_result', (data) => {
-    document.getElementById('round-info').innerText = data.message;
+    const opponentCardMessage = `Opponent played ${data.card2}.`;
+    const roundMessage = `${data.message}`;
+    document.getElementById('round-info').innerText = `${opponentCardMessage} ${roundMessage}`;
     document.getElementById('scores').innerText = `Scores - ${data.player1}: ${data.scores[data.player1]} | ${data.player2}: ${data.scores[data.player2]}`;
 });
+
 
 // Game over
 socket.on('game_over', (data) => {
@@ -93,6 +95,10 @@ document.getElementById('return-home-btn').addEventListener('click', () => {
     document.getElementById('game-over').style.display = 'none';
     document.getElementById('join-game').style.display = 'block';
     document.getElementById('waiting-message').innerText = '';
+});
+
+socket.on('error', (data) => {
+    alert(data.message); // Display the error message in an alert
 });
 
 // Card value conversion helper

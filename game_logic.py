@@ -65,18 +65,19 @@ class Game:
         if card1 > card2:
             total_prize = sum(self.accumulated_prizes)
             self.scores[player1] += total_prize
-            result['message'] = f"{player1} wins the accumulated prizes worth {total_prize}!"
+            result['message'] = f"Opponent played {self.card_value_to_display(card2)}. {player1} wins the prize worth {total_prize}!"
             self.accumulated_prizes.clear()
         elif card2 > card1:
             total_prize = sum(self.accumulated_prizes)
             self.scores[player2] += total_prize
-            result['message'] = f"{player2} wins the accumulated prizes worth {total_prize}!"
+            result['message'] = f"Opponent played {self.card_value_to_display(card1)}. {player2} wins the prize worth {total_prize}!"
             self.accumulated_prizes.clear()
         else:
-            result['message'] = "It's a tie! The prize cards accumulate."
+            result['message'] = f"Both players played {self.card_value_to_display(card1)}. It's a tie! The prize cards accumulate."
 
         result['scores'] = self.scores.copy()
         return result
+
 
     def clear_selected_cards(self):
         """Clear the selected cards for the next round."""
