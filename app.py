@@ -54,7 +54,8 @@ def on_join(data):
 
         # Draw the first prize card
         prize_card = game.next_prize_card()
-        socketio.emit('update_prize', {'prize_card': prize_card}, room=room)
+        accumulated_prizes = game.get_accumulated_prizes_display()
+        socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
 
 @socketio.on('select_card')
 def on_select_card(data):
@@ -98,7 +99,8 @@ def on_select_card(data):
 
                 # Send next prize card to the room
                 prize_card = game.next_prize_card()
-                socketio.emit('update_prize', {'prize_card': prize_card}, room=room)
+                accumulated_prizes = game.get_accumulated_prizes_display()
+                socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
                 # Clear selected cards for the next round
                 game.clear_selected_cards()
         else:

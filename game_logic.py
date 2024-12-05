@@ -92,6 +92,9 @@ class Game:
 
     def get_player_hand(self, player):
         return [self.card_value_to_display(card) for card in self.hands[player]]
+    
+    def get_accumulated_prizes_display(self):
+        return [self.card_value_to_display(card) for card in self.accumulated_prizes]
 
     def card_value_to_display(self, value):
         """Convert numeric card value to display value."""

@@ -53,7 +53,11 @@ function highlightSelectedCard(selectedBtn) {
 
 socket.on('update_prize', (data) => {
     document.getElementById('prize-card').innerText = `Prize Card: ${data.prize_card}`;
-    document.getElementById('accumulated-prizes').innerText = ''; // Clear accumulated prizes display
+    if (data.accumulated_prizes && data.accumulated_prizes.length > 0) {
+        document.getElementById('accumulated-prizes').innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(', ')}`;
+    } else {
+        document.getElementById('accumulated-prizes').innerText = 'Accumulated Prizes: None';
+    }
 });
 
 socket.on('round_result', (data) => {
