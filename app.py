@@ -56,10 +56,10 @@ def on_join(data):
         prize_card = game.next_prize_card()
         socketio.emit('update_prize', {'prize_card': prize_card}, room=room)
 
-@socketio.on('play_card')
-def on_play_card(data):
+@socketio.on('select_card')
+def on_select_card(data):
     username = data['username']
-    card = data['card']
+    card = int(data['card'])  # Convert card to integer
 
     # Find the game this player is in
     room = None
@@ -74,9 +74,11 @@ def on_play_card(data):
 
     game = games.get(room)
     if game:
-        game.play_card(username, card)
+        game.update_selected_card(username, card)
 
-        if game.both_players_played():
+        # Check if both players have made a selection
+        if game.both_players_selected():
+            # Process the round
             result = game.resolve_round()
             # Send round result to both players
             socketio.emit('round_result', result, room=room)
@@ -97,9 +99,11 @@ def on_play_card(data):
                 # Send next prize card to the room
                 prize_card = game.next_prize_card()
                 socketio.emit('update_prize', {'prize_card': prize_card}, room=room)
+                # Clear selected cards for the next round
+                game.clear_selected_cards()
         else:
-            # Wait for the other player
-            pass
+            # Notify the other player that a selection has been made
+            pass  # No action needed at this point
 
 @socketio.on('disconnect')
 def on_disconnect():

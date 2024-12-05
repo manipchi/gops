@@ -1,5 +1,3 @@
-<!-- templates/index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,11 +18,13 @@
             <p id="accumulated-prizes">Accumulated Prizes: </p>
             <p id="your-hand">Your Hand: </p>
             <div id="hand-cards"></div>
+            <p id="selected-card">Selected Card: None</p>
             <p id="round-info"></p>
             <p id="scores"></p>
         </div>
     </div>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <!-- Include the latest Socket.IO client library -->
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

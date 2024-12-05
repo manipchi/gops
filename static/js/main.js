@@ -1,6 +1,4 @@
-// static/js/main.js
-
-const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+const socket = io();
 
 let username;
 
@@ -21,6 +19,8 @@ socket.on('game_start', (data) => {
     document.getElementById('game').style.display = 'block';
 });
 
+let selectedCard = null;
+
 socket.on('update_hand', (data) => {
     const handDiv = document.getElementById('hand-cards');
     handDiv.innerHTML = '';
@@ -28,21 +28,36 @@ socket.on('update_hand', (data) => {
     data.hand.forEach(card => {
         const btn = document.createElement('button');
         btn.innerText = card;
+        btn.dataset.cardValue = card_to_value(card); // Store the card value
+        btn.classList.add('card-button');
         btn.addEventListener('click', () => {
-            btn.disabled = true;
-            socket.emit('play_card', {'username': username, 'card': card_to_value(card)});
+            selectedCard = btn.dataset.cardValue;
+            highlightSelectedCard(btn);
+            socket.emit('select_card', {'username': username, 'card': selectedCard});
         });
         handDiv.appendChild(btn);
     });
 
     document.getElementById('your-hand').innerText = 'Your Hand:';
+    document.getElementById('selected-card').innerText = 'Selected Card: None';
 });
+
+function highlightSelectedCard(selectedBtn) {
+    const buttons = document.querySelectorAll('#hand-cards .card-button');
+    buttons.forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    selectedBtn.classList.add('selected');
+    document.getElementById('selected-card').innerText = 'Selected Card: ' + selectedBtn.innerText;
+}
 
 socket.on('update_prize', (data) => {
     document.getElementById('prize-card').innerText = `Prize Card: ${data.prize_card}`;
+    document.getElementById('accumulated-prizes').innerText = ''; // Clear accumulated prizes display
 });
 
 socket.on('round_result', (data) => {
+    selectedCard = null;
     document.getElementById('round-info').innerText = data.message;
     document.getElementById('scores').innerText = `Scores - ${data.player1}: ${data.scores[data.player1]} | ${data.player2}: ${data.scores[data.player2]}`;
 });
@@ -50,6 +65,15 @@ socket.on('round_result', (data) => {
 socket.on('game_over', (data) => {
     alert(`Game Over! Winner: ${data.winner}`);
     location.reload();
+});
+
+socket.on('player_disconnected', (data) => {
+    alert(data.message);
+    location.reload();
+});
+
+socket.on('error', (data) => {
+    alert(data.message);
 });
 
 function card_to_value(card) {

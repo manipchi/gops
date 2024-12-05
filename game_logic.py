@@ -7,7 +7,7 @@ class Game:
         self.player_sids = dict(zip(players, sids))  # Map usernames to session IDs
         self.hands = {}
         self.scores = {}
-        self.played_cards = {}
+        self.selected_cards = {}  # Store the currently selected card for each player
         self.prize_deck = self.create_deck()
         random.shuffle(self.prize_deck)
         self.accumulated_prizes = []
@@ -16,7 +16,7 @@ class Game:
         for player in players:
             self.hands[player] = self.create_deck()
             self.scores[player] = 0
-            self.played_cards[player] = None
+            self.selected_cards[player] = None
 
     def create_deck(self):
         """Create a deck with face cards represented as 'A', 'J', 'Q', 'K'."""
@@ -31,17 +31,22 @@ class Game:
             self.current_prize_card = None
             return None
 
-    def play_card(self, player, card):
-        self.hands[player].remove(card)
-        self.played_cards[player] = card
+    def update_selected_card(self, player, card):
+        card = int(card)  # Ensure the card is an integer
+        if card in self.hands[player]:
+            self.selected_cards[player] = card
 
-    def both_players_played(self):
-        return all(card is not None for card in self.played_cards.values())
+    def both_players_selected(self):
+        return all(card is not None for card in self.selected_cards.values())
 
     def resolve_round(self):
         player1, player2 = self.players
-        card1 = self.played_cards[player1]
-        card2 = self.played_cards[player2]
+        card1 = self.selected_cards[player1]
+        card2 = self.selected_cards[player2]
+
+        # Remove the played cards from players' hands
+        self.hands[player1].remove(card1)
+        self.hands[player2].remove(card2)
 
         result = {
             'player1': player1,
@@ -64,12 +69,12 @@ class Game:
         else:
             result['message'] = "It's a tie! The prize cards accumulate."
 
-        # Reset played cards
-        self.played_cards[player1] = None
-        self.played_cards[player2] = None
-
         result['scores'] = self.scores.copy()
         return result
+
+    def clear_selected_cards(self):
+        for player in self.players:
+            self.selected_cards[player] = None
 
     def is_over(self):
         return not self.prize_deck and not self.accumulated_prizes
