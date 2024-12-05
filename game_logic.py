@@ -54,11 +54,11 @@ class Game:
         if card2 in self.hands[player2]:
             self.hands[player2].remove(card2)
 
-        # Generate round result messages
+        # Update scores immediately
         result_player1 = {
             'opponent_card': self.card_value_to_display(card2),
             'your_card': self.card_value_to_display(card1),
-            'scores': self.scores.copy(),
+            'scores': self.scores.copy(),  # Copy ensures scores are current
             'message': ''
         }
 
@@ -85,7 +85,12 @@ class Game:
             result_player1['message'] = f"Both players played {self.card_value_to_display(card1)}. It's a tie! The prize cards accumulate."
             result_player2['message'] = f"Both players played {self.card_value_to_display(card2)}. It's a tie! The prize cards accumulate."
 
+        # Include updated scores
+        result_player1['scores'] = self.scores.copy()
+        result_player2['scores'] = self.scores.copy()
+
         return result_player1, result_player2
+
 
 
 

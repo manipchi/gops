@@ -120,6 +120,7 @@ def on_select_card(data):
 
 
 
+
 @socketio.on('disconnect')
 def on_disconnect():
     global waiting_player

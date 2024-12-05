@@ -64,7 +64,7 @@ socket.on('update_prize', (data) => {
 
 socket.on('round_result', (data) => {
     const roundMessage = `${data.message}`;
-    document.getElementById('round-info').innerText = roundMessage; // Display only the tailored round message
+    document.getElementById('round-info').innerText = roundMessage;
     document.getElementById('scores').innerText = `Your Score: ${data.scores[username]}`;
 });
 
