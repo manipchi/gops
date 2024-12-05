@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Goofspiel Online</title>
-    <!-- Import Roboto Mono font from Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
@@ -23,8 +22,11 @@
             <p id="round-info"></p>
             <p id="scores"></p>
         </div>
+        <div id="game-over" style="display: none;">
+            <p id="game-over-message"></p>
+            <button id="find-new-game-btn">Find New Game</button>
+        </div>
     </div>
-    <!-- Include the latest Socket.IO client library -->
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>

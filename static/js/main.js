@@ -2,25 +2,29 @@ const socket = io();
 
 let username;
 
+// Join game
 document.getElementById('join-btn').addEventListener('click', () => {
     username = document.getElementById('username').value;
 
     if (username) {
-        socket.emit('join', {'username': username});
+        socket.emit('join', { username: username });
+        document.getElementById('waiting-message').innerText = "Looking for a match...";
     }
 });
 
+// Handle waiting message
 socket.on('waiting', (data) => {
     document.getElementById('waiting-message').innerText = data.message;
 });
 
+// Start game
 socket.on('game_start', (data) => {
     document.getElementById('join-game').style.display = 'none';
     document.getElementById('game').style.display = 'block';
+    document.getElementById('game-over').style.display = 'none';
 });
 
-let selectedCard = null;
-
+// Update hand and other elements during the game
 socket.on('update_hand', (data) => {
     const handDiv = document.getElementById('hand-cards');
     handDiv.innerHTML = '';
@@ -28,26 +32,16 @@ socket.on('update_hand', (data) => {
     data.hand.forEach(card => {
         const btn = document.createElement('button');
         btn.innerText = card;
-        btn.dataset.cardValue = card_to_value(card); // Store the card value
+        btn.dataset.cardValue = card_to_value(card);
         btn.classList.add('card-button');
         btn.addEventListener('click', () => {
-            selectedCard = btn.dataset.cardValue;
-            highlightSelectedCard(btn);
-            socket.emit('select_card', {'username': username, 'card': selectedCard});
+            socket.emit('select_card', { username: username, card: btn.dataset.cardValue });
         });
         handDiv.appendChild(btn);
     });
 
     document.getElementById('your-hand').innerText = 'Your Hand:';
 });
-
-function highlightSelectedCard(selectedBtn) {
-    const buttons = document.querySelectorAll('#hand-cards .card-button');
-    buttons.forEach(btn => {
-        btn.classList.remove('selected');
-    });
-    selectedBtn.classList.add('selected');
-}
 
 socket.on('update_prize', (data) => {
     document.getElementById('prize-card').innerText = `Prize Card: ${data.prize_card}`;
@@ -58,30 +52,33 @@ socket.on('update_prize', (data) => {
     }
 });
 
+// Display round result
 socket.on('round_result', (data) => {
-    selectedCard = null;
     document.getElementById('round-info').innerText = data.message;
     document.getElementById('scores').innerText = `Scores - ${data.player1}: ${data.scores[data.player1]} | ${data.player2}: ${data.scores[data.player2]}`;
 });
 
+// Game over
 socket.on('game_over', (data) => {
+    document.getElementById('game').style.display = 'none';
+    document.getElementById('game-over').style.display = 'block';
+
+    let gameOverMessage = `Game Over! Winner: ${data.winner}`;
     if (data.accumulated_prizes && data.accumulated_prizes.length > 0) {
-        alert(`Game Over! Winner: ${data.winner}\nUnclaimed Prizes: ${data.accumulated_prizes.join(', ')}`);
-    } else {
-        alert(`Game Over! Winner: ${data.winner}`);
+        gameOverMessage += `\nUnclaimed Prizes: ${data.accumulated_prizes.join(', ')}`;
     }
-    location.reload();
+    document.getElementById('game-over-message').innerText = gameOverMessage;
 });
 
-socket.on('player_disconnected', (data) => {
-    alert(data.message);
-    location.reload();
+// Find new game
+document.getElementById('find-new-game-btn').addEventListener('click', () => {
+    document.getElementById('game-over').style.display = 'none';
+    document.getElementById('join-game').style.display = 'block';
+    document.getElementById('waiting-message').innerText = '';
+    username = ''; // Clear username so the user can re-enter or confirm
 });
 
-socket.on('error', (data) => {
-    alert(data.message);
-});
-
+// Card value conversion helper
 function card_to_value(card) {
     if (card === 'A') return 1;
     if (card === 'J') return 11;

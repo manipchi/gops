@@ -1,7 +1,7 @@
 body {
     font-family: 'Roboto Mono', monospace;
     text-align: center;
-    background-color: #f0f0f0; /* Light grey background */
+    background-color: #f0f0f0;
 }
 
 #game-container {
@@ -10,49 +10,25 @@ body {
 }
 
 h1 {
-    color: #37A908; /* The shade of green */
+    color: #37A908;
 }
 
-#hand-cards button {
-    margin: 5px;
+button {
+    margin: 10px;
     padding: 10px 20px;
     font-size: 16px;
     font-family: 'Roboto Mono', monospace;
-}
-
-#hand-cards button.selected {
     background-color: #37A908;
     color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-#join-game input {
-    margin: 5px;
-    padding: 10px;
-    font-size: 16px;
-    font-family: 'Roboto Mono', monospace;
+button:hover {
+    background-color: #2e7a06;
 }
 
-#join-game button {
-    padding: 10px 20px;
-    font-size: 16px;
-    font-family: 'Roboto Mono', monospace;
-}
-
-#prize-card,
-#accumulated-prizes,
-#your-hand,
-#selected-card,
-#round-info,
-#scores,
-#waiting-message {
-    font-family: 'Roboto Mono', monospace;
-}
-
-#prize-card,
-#accumulated-prizes {
-    color: #37A908; /* Green color */
-}
-
-#waiting-message {
-    color: #555; /* Slightly darker grey */
+#game-over {
+    margin-top: 20px;
 }
