@@ -114,22 +114,32 @@ def on_select_card(data):
 def on_disconnect():
     global waiting_player
     sid = request.sid
+
     if waiting_player and waiting_player['sid'] == sid:
-        waiting_player = None
+        waiting_player = None  # Remove the waiting player
     else:
         # Handle disconnection during a game
-        # Find the game the player was in and notify the other player
         for room, game in list(games.items()):
             if sid in game.player_sids.values():
+                # Find the other player in the game
                 other_player_sid = None
                 for player_sid in game.player_sids.values():
                     if player_sid != sid:
                         other_player_sid = player_sid
                         break
+
+                # Notify the other player about the disconnection
                 if other_player_sid:
-                    socketio.emit('player_disconnected', {'message': 'The other player has disconnected.'}, to=other_player_sid)
+                    socketio.emit(
+                        'player_disconnected',
+                        {'message': 'Your opponent has disconnected. The game is over.'},
+                        to=other_player_sid
+                    )
+
+                # Remove the game from active games
                 del games[room]
                 break
+
 
 
 if __name__ == '__main__':

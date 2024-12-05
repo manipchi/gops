@@ -79,6 +79,12 @@ socket.on('game_over', (data) => {
     document.getElementById('game-over-message').innerText = gameOverMessage;
 });
 
+socket.on('player_disconnected', (data) => {
+    document.getElementById('game').style.display = 'none';
+    document.getElementById('game-over').style.display = 'block';
+    document.getElementById('game-over-message').innerText = data.message;
+});
+
 // Return to home
 document.getElementById('return-home-btn').addEventListener('click', () => {
     document.getElementById('game').style.display = 'none';
