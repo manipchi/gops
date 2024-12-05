@@ -61,7 +61,6 @@ def on_join(data):
 
 
 @socketio.on('select_card')
-@socketio.on('select_card')
 def on_select_card(data):
     username = data['username']
     card = int(data['card'])  # Convert card to integer
@@ -109,7 +108,6 @@ def on_select_card(data):
                 game.clear_selected_cards()
 
 
-
 @socketio.on('disconnect')
 def on_disconnect():
     global waiting_player
@@ -130,7 +128,6 @@ def on_disconnect():
 
                 # Notify the other player about the disconnection
                 if other_player_sid:
-                    print(f"Player {sid} disconnected. Notifying {other_player_sid}.")
                     socketio.emit(
                         'player_disconnected',
                         {'message': 'Your opponent has disconnected. The game is over.'},
@@ -140,6 +137,7 @@ def on_disconnect():
                 # Remove the game from active games
                 del games[room]
                 break
+
 
 if __name__ == '__main__':
     socketio.run(app)
