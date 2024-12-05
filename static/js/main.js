@@ -68,20 +68,16 @@ socket.on('round_result', (data) => {
     document.getElementById('scores').innerText = `Your Score: ${data.scores[username]}`;
 });
 
-
-
-
-// Game over
 socket.on('game_over', (data) => {
     document.getElementById('game').style.display = 'none';
     document.getElementById('game-over').style.display = 'block';
-
     let gameOverMessage = `Game Over! Winner: ${data.winner}`;
     if (data.accumulated_prizes && data.accumulated_prizes.length > 0) {
         gameOverMessage += `\nUnclaimed Prizes: ${data.accumulated_prizes.join(', ')}`;
     }
     document.getElementById('game-over-message').innerText = gameOverMessage;
 });
+
 
 // Handle player disconnection
 socket.on('player_disconnected', (data) => {

@@ -54,11 +54,11 @@ class Game:
         if card2 in self.hands[player2]:
             self.hands[player2].remove(card2)
 
-        # Update scores immediately
+        # Generate round result messages
         result_player1 = {
             'opponent_card': self.card_value_to_display(card2),
             'your_card': self.card_value_to_display(card1),
-            'scores': self.scores.copy(),  # Copy ensures scores are current
+            'scores': self.scores.copy(),
             'message': ''
         }
 
@@ -82,16 +82,20 @@ class Game:
             result_player2['message'] = f"Opponent played {self.card_value_to_display(card1)}. You win the prize worth {total_prize}!"
             self.accumulated_prizes.clear()
         else:
+            # Handle ties
             result_player1['message'] = f"Both players played {self.card_value_to_display(card1)}. It's a tie! The prize cards accumulate."
             result_player2['message'] = f"Both players played {self.card_value_to_display(card2)}. It's a tie! The prize cards accumulate."
+
+            # If the deck is empty, declare the game over with no winner for the accumulated prizes
+            if not self.prize_deck:
+                result_player1['message'] += " The game is over. No one wins the remaining prizes."
+                result_player2['message'] += " The game is over. No one wins the remaining prizes."
 
         # Include updated scores
         result_player1['scores'] = self.scores.copy()
         result_player2['scores'] = self.scores.copy()
 
         return result_player1, result_player2
-
-
 
 
     def clear_selected_cards(self):
@@ -101,7 +105,9 @@ class Game:
 
     def is_over(self):
         """Check if the game is over."""
+        # The game is over if the prize deck is empty and no cards remain in the accumulated prizes
         return not self.prize_deck and not self.accumulated_prizes
+
 
     def get_winner(self):
         """Determine the winner of the game."""
