@@ -31,4 +31,10 @@ button:hover {
 
 #game-over {
     margin-top: 20px;
+    display: none;
+}
+
+#game-over-message {
+    font-size: 18px;
+    color: #555;
 }

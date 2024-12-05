@@ -60,7 +60,6 @@ socket.on('round_result', (data) => {
 
 // Game over
 socket.on('game_over', (data) => {
-    document.getElementById('game').style.display = 'none';
     document.getElementById('game-over').style.display = 'block';
 
     let gameOverMessage = `Game Over! Winner: ${data.winner}`;
@@ -70,12 +69,11 @@ socket.on('game_over', (data) => {
     document.getElementById('game-over-message').innerText = gameOverMessage;
 });
 
-// Find new game
-document.getElementById('find-new-game-btn').addEventListener('click', () => {
-    document.getElementById('game-over').style.display = 'none';
+// Return to home
+document.getElementById('return-home-btn').addEventListener('click', () => {
+    document.getElementById('game').style.display = 'none';
     document.getElementById('join-game').style.display = 'block';
     document.getElementById('waiting-message').innerText = '';
-    username = ''; // Clear username so the user can re-enter or confirm
 });
 
 // Card value conversion helper
