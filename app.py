@@ -130,6 +130,7 @@ def on_disconnect():
 
                 # Notify the other player about the disconnection
                 if other_player_sid:
+                    print(f"Player {sid} disconnected. Notifying {other_player_sid}.")
                     socketio.emit(
                         'player_disconnected',
                         {'message': 'Your opponent has disconnected. The game is over.'},
@@ -139,6 +140,7 @@ def on_disconnect():
                 # Remove the game from active games
                 del games[room]
                 break
+
 
 
 

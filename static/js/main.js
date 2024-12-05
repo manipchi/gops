@@ -80,20 +80,20 @@ socket.on('game_over', (data) => {
 });
 
 socket.on('player_disconnected', (data) => {
-    // Hide the game screen
-    document.getElementById('game').style.display = 'none';
+    console.log("Player disconnected event received:", data.message);
 
-    // Show the game-over screen with the appropriate message
-    document.getElementById('game-over').style.display = 'block';
-    document.getElementById('game-over-message').innerText = data.message;
+    // Attempt to hide the game screen and show the game-over screen
+    try {
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('game-over').style.display = 'block';
+        document.getElementById('game-over-message').innerText = data.message;
+        console.log("Game-over screen displayed successfully.");
+    } catch (error) {
+        console.error("Error updating the UI:", error);
+        alert(data.message);
+    }
 });
 
-// Return to home button functionality (already implemented)
-document.getElementById('return-home-btn').addEventListener('click', () => {
-    document.getElementById('game').style.display = 'none';
-    document.getElementById('join-game').style.display = 'block';
-    document.getElementById('waiting-message').innerText = '';
-});
 
 // Return to home
 document.getElementById('return-home-btn').addEventListener('click', () => {
