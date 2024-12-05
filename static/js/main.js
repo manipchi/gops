@@ -66,7 +66,12 @@ socket.on('round_result', (data) => {
     const roundMessage = `${data.message}`;
     document.getElementById('round-info').innerText = roundMessage;
     document.getElementById('scores').innerText = `Your Score: ${data.scores[username]}`;
+
+    // Reset card highlighting
+    const buttons = document.querySelectorAll('#hand-cards button');
+    buttons.forEach(btn => btn.classList.remove('selected'));
 });
+
 
 socket.on('game_over', (data) => {
     document.getElementById('game').style.display = 'none';

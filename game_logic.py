@@ -103,6 +103,7 @@ class Game:
         for player in self.players:
             self.selected_cards[player] = None
 
+
     def is_over(self):
         """Check if the game is over."""
         # The game is over if the prize deck is empty and no cards remain in the accumulated prizes

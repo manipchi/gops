@@ -98,16 +98,26 @@ def on_select_card(data):
             socketio.emit('round_result', result_player1, to=player1_sid)
             socketio.emit('round_result', result_player2, to=player2_sid)
 
+            # Clear selected cards for the next round
+            game.clear_selected_cards()
+
             # Check if the game is over
             if game.is_over():
                 game_details = game.get_game_over_details()
                 socketio.emit('game_over', game_details, room=room)
                 # Clean up
                 del games[room]
+            else:
+                # Send updated hands to each player individually
+                for player in game.players:
+                    hand = game.get_player_hand(player)
+                    player_sid = game.player_sids[player]
+                    socketio.emit('update_hand', {'hand': hand}, to=player_sid)
 
-
-
-
+                # Send next prize card to the room
+                prize_card = game.next_prize_card()
+                accumulated_prizes = game.get_accumulated_prizes_display()
+                socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
 
 @socketio.on('disconnect')
 def on_disconnect():
