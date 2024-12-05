@@ -1,11 +1,28 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, flash, url_for
 from flask_socketio import SocketIO, emit
 from game_logic import Game
 import random
 
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from models import db, User
+from utils import calculate_elo
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 socketio = SocketIO(app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://uqhmspm21ctn8:p1edca59a081df27c91fa6a40914e581578d80b12699508ca023022295ace9a2c@cbdhrtd93854d5.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d8to4qqo86v29d'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
+bcrypt = Bcrypt(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 # Store active games and waiting player
 games = {}
@@ -16,53 +33,74 @@ waiting_player = None  # Holds the waiting player's info (username and session I
 def index():
     return render_template('index.html')
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        user = User(username=username, email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Registration successful!', 'success')
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if user and user.check_password(password):
+            login_user(user)
+            flash('Login successful!', 'success')
+            return redirect(url_for('index'))
+        flash('Invalid username or password.', 'danger')
+    return render_template('login.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('Logged out successfully.', 'info')
+    return redirect(url_for('login'))
+
+@app.route('/leaderboard')
+def leaderboard():
+    users = User.query.order_by(User.elo.desc()).all()
+    return render_template('leaderboard.html', users=users)
 
 @socketio.on('join')
+@login_required
 def on_join(data):
     global waiting_player
-    username = data['username']
-    sid = request.sid  # Get the session ID of the player
-
-    if waiting_player and waiting_player['sid'] == sid:
-        # Prevent matching a player to themselves
-        emit('error', {'message': 'You cannot join a game against yourself.'}, to=sid)
-        return
+    username = current_user.username
 
     if waiting_player is None:
-        # No players are waiting, so this player waits
-        waiting_player = {'username': username, 'sid': sid}
-        emit('waiting', {'message': 'Waiting for another player to join...'}, to=sid)
+        waiting_player = {'username': username, 'sid': request.sid}
+        emit('waiting', {'message': 'Waiting for another player...'}, to=request.sid)
     else:
-        # Pair this player with the waiting player
         player1 = waiting_player['username']
-        player1_sid = waiting_player['sid']
         player2 = username
-        player2_sid = sid
-        waiting_player = None  # Reset waiting player
+        room = f'{player1}_vs_{player2}'
+        waiting_player = None
 
-        room = f'room_{player1}_{player2}'
-
-        # Make both players join the room
-        socketio.server.enter_room(player1_sid, room)
-        socketio.server.enter_room(player2_sid, room)
+        # Create a new game instance
+        game = Game(room, [player1, player2], [waiting_player['sid'], request.sid])
+        games[room] = game
 
         # Notify both players
         socketio.emit('game_start', {'players': [player1, player2]}, room=room)
 
-        # Start the game
-        game = Game(room, [player1, player2], [player1_sid, player2_sid])
-        games[room] = game
-
-        # Send initial game state to both players individually
-        for player in game.players:
-            hand = game.get_player_hand(player)
-            player_sid = game.player_sids[player]
-            socketio.emit('update_hand', {'hand': hand}, to=player_sid)
-
-        # Draw the first prize card
-        prize_card = game.next_prize_card()
-        accumulated_prizes = game.get_accumulated_prizes_display()
-        socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
 
 
 
@@ -118,6 +156,36 @@ def on_select_card(data):
                 prize_card = game.next_prize_card()
                 accumulated_prizes = game.get_accumulated_prizes_display()
                 socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
+
+@socketio.on('game_over')
+def handle_game_over(data):
+    winner_username = data.get('winner')
+    players = data.get('players')
+    room = data.get('room')
+
+    if not winner_username or not players or not room:
+        return
+
+    player1 = User.query.filter_by(username=players[0]).first()
+    player2 = User.query.filter_by(username=players[1]).first()
+
+    if not player1 or not player2:
+        return
+
+    # Update Elo ratings based on the game outcome
+    if winner_username == player1.username:
+        calculate_elo(player1, player2)
+    elif winner_username == player2.username:
+        calculate_elo(player2, player1)
+
+    db.session.commit()
+
+    # Notify players of updated Elo ratings
+    socketio.emit('elo_update', {
+        'player1': {'username': player1.username, 'elo': player1.elo},
+        'player2': {'username': player2.username, 'elo': player2.elo}
+    }, room=room)
+
 
 @socketio.on('disconnect')
 def on_disconnect():
