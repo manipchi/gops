@@ -63,11 +63,12 @@ socket.on('update_prize', (data) => {
 });
 
 socket.on('round_result', (data) => {
-    const opponentCardMessage = `Opponent played ${data.card2}.`;
+    const opponentCardMessage = `Opponent played ${data.opponent_card}.`;
     const roundMessage = `${data.message}`;
     document.getElementById('round-info').innerText = `${opponentCardMessage} ${roundMessage}`;
-    document.getElementById('scores').innerText = `Scores - ${data.player1}: ${data.scores[data.player1]} | ${data.player2}: ${data.scores[data.player2]}`;
+    document.getElementById('scores').innerText = `Your Score: ${data.scores[username]}`;
 });
+
 
 
 // Game over

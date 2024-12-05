@@ -54,29 +54,39 @@ class Game:
         if card2 in self.hands[player2]:
             self.hands[player2].remove(card2)
 
-        result = {
-            'player1': player1,
-            'player2': player2,
-            'card1': self.card_value_to_display(card1),
-            'card2': self.card_value_to_display(card2),
+        # Generate round result messages
+        result_player1 = {
+            'opponent_card': self.card_value_to_display(card2),
+            'your_card': self.card_value_to_display(card1),
+            'scores': self.scores.copy(),
+            'message': ''
+        }
+
+        result_player2 = {
+            'opponent_card': self.card_value_to_display(card1),
+            'your_card': self.card_value_to_display(card2),
+            'scores': self.scores.copy(),
             'message': ''
         }
 
         if card1 > card2:
             total_prize = sum(self.accumulated_prizes)
             self.scores[player1] += total_prize
-            result['message'] = f"Opponent played {self.card_value_to_display(card2)}. {player1} wins the prize worth {total_prize}!"
+            result_player1['message'] = f"Opponent played {self.card_value_to_display(card2)}. You win the prize worth {total_prize}!"
+            result_player2['message'] = f"Opponent played {self.card_value_to_display(card1)}. They win the prize worth {total_prize}!"
             self.accumulated_prizes.clear()
         elif card2 > card1:
             total_prize = sum(self.accumulated_prizes)
             self.scores[player2] += total_prize
-            result['message'] = f"Opponent played {self.card_value_to_display(card1)}. {player2} wins the prize worth {total_prize}!"
+            result_player1['message'] = f"Opponent played {self.card_value_to_display(card2)}. They win the prize worth {total_prize}!"
+            result_player2['message'] = f"Opponent played {self.card_value_to_display(card1)}. You win the prize worth {total_prize}!"
             self.accumulated_prizes.clear()
         else:
-            result['message'] = f"Both players played {self.card_value_to_display(card1)}. It's a tie! The prize cards accumulate."
+            result_player1['message'] = f"Both players played {self.card_value_to_display(card1)}. It's a tie! The prize cards accumulate."
+            result_player2['message'] = f"Both players played {self.card_value_to_display(card2)}. It's a tie! The prize cards accumulate."
 
-        result['scores'] = self.scores.copy()
-        return result
+        return result_player1, result_player2
+
 
 
     def clear_selected_cards(self):
