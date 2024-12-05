@@ -3,14 +3,12 @@
 const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
 let username;
-let room;
 
 document.getElementById('join-btn').addEventListener('click', () => {
     username = document.getElementById('username').value;
-    room = document.getElementById('room').value;
 
-    if (username && room) {
-        socket.emit('join', {'username': username, 'room': room});
+    if (username) {
+        socket.emit('join', {'username': username});
     }
 });
 
@@ -32,7 +30,7 @@ socket.on('update_hand', (data) => {
         btn.innerText = card;
         btn.addEventListener('click', () => {
             btn.disabled = true;
-            socket.emit('play_card', {'username': username, 'room': room, 'card': card_to_value(card)});
+            socket.emit('play_card', {'username': username, 'card': card_to_value(card)});
         });
         handDiv.appendChild(btn);
     });

@@ -1,11 +1,10 @@
-# game_logic.py
-
 import random
 
 class Game:
-    def __init__(self, room, players):
+    def __init__(self, room, players, sids):
         self.room = room
         self.players = players  # List of player usernames
+        self.player_sids = dict(zip(players, sids))  # Map usernames to session IDs
         self.hands = {}
         self.scores = {}
         self.played_cards = {}
