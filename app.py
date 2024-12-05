@@ -11,9 +11,11 @@ socketio = SocketIO(app)
 games = {}
 waiting_player = None  # Holds the waiting player's info (username and session ID)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @socketio.on('join')
 def on_join(data):
@@ -57,6 +59,7 @@ def on_join(data):
         accumulated_prizes = game.get_accumulated_prizes_display()
         socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
 
+
 @socketio.on('select_card')
 def on_select_card(data):
     username = data['username']
@@ -86,8 +89,8 @@ def on_select_card(data):
 
             # Check if the game is over
             if game.is_over():
-                winner = game.get_winner()
-                socketio.emit('game_over', {'winner': winner}, room=room)
+                game_details = game.get_game_over_details()
+                socketio.emit('game_over', game_details, room=room)
                 # Clean up
                 del games[room]
             else:
@@ -103,9 +106,7 @@ def on_select_card(data):
                 socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
                 # Clear selected cards for the next round
                 game.clear_selected_cards()
-        else:
-            # Notify the other player that a selection has been made
-            pass  # No action needed at this point
+
 
 @socketio.on('disconnect')
 def on_disconnect():
@@ -127,6 +128,7 @@ def on_disconnect():
                     socketio.emit('player_disconnected', {'message': 'The other player has disconnected.'}, to=other_player_sid)
                 del games[room]
                 break
+
 
 if __name__ == '__main__':
     socketio.run(app)

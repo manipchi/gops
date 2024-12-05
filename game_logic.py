@@ -72,10 +72,6 @@ class Game:
         result['scores'] = self.scores.copy()
         return result
 
-    def clear_selected_cards(self):
-        for player in self.players:
-            self.selected_cards[player] = None
-
     def is_over(self):
         return not self.prize_deck and not self.accumulated_prizes
 
@@ -89,6 +85,12 @@ class Game:
             return player2
         else:
             return 'Tie'
+
+    def get_game_over_details(self):
+        return {
+            'winner': self.get_winner(),
+            'accumulated_prizes': self.get_accumulated_prizes_display() if self.get_winner() == 'Tie' else []
+        }
 
     def get_player_hand(self, player):
         return [self.card_value_to_display(card) for card in self.hands[player]]

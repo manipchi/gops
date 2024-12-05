@@ -39,7 +39,6 @@ socket.on('update_hand', (data) => {
     });
 
     document.getElementById('your-hand').innerText = 'Your Hand:';
-    document.getElementById('selected-card').innerText = 'Selected Card: None';
 });
 
 function highlightSelectedCard(selectedBtn) {
@@ -48,7 +47,6 @@ function highlightSelectedCard(selectedBtn) {
         btn.classList.remove('selected');
     });
     selectedBtn.classList.add('selected');
-    document.getElementById('selected-card').innerText = 'Selected Card: ' + selectedBtn.innerText;
 }
 
 socket.on('update_prize', (data) => {
@@ -67,7 +65,11 @@ socket.on('round_result', (data) => {
 });
 
 socket.on('game_over', (data) => {
-    alert(`Game Over! Winner: ${data.winner}`);
+    if (data.accumulated_prizes && data.accumulated_prizes.length > 0) {
+        alert(`Game Over! Winner: ${data.winner}\nUnclaimed Prizes: ${data.accumulated_prizes.join(', ')}`);
+    } else {
+        alert(`Game Over! Winner: ${data.winner}`);
+    }
     location.reload();
 });
 
