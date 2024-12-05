@@ -80,9 +80,19 @@ socket.on('game_over', (data) => {
 });
 
 socket.on('player_disconnected', (data) => {
+    // Hide the game screen
     document.getElementById('game').style.display = 'none';
+
+    // Show the game-over screen with the appropriate message
     document.getElementById('game-over').style.display = 'block';
     document.getElementById('game-over-message').innerText = data.message;
+});
+
+// Return to home button functionality (already implemented)
+document.getElementById('return-home-btn').addEventListener('click', () => {
+    document.getElementById('game').style.display = 'none';
+    document.getElementById('join-game').style.display = 'block';
+    document.getElementById('waiting-message').innerText = '';
 });
 
 // Return to home
