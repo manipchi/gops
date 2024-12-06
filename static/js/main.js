@@ -2,6 +2,39 @@ const socket = io();
 
 let username;
 
+document.addEventListener("DOMContentLoaded", () => {
+    const socket = io(); // Connect to the WebSocket server
+
+    // Handle the "Join Game" button click
+    document.getElementById('join-btn').addEventListener('click', () => {
+        const username = document.getElementById('username').value;
+
+        if (!username) {
+            alert('Please enter a username before joining the game.');
+            return;
+        }
+
+        socket.emit('join', { username }); // Send the join event to the server
+    });
+
+    // Waiting for another player
+    socket.on('waiting', (data) => {
+        document.getElementById('waiting-message').innerText = data.message;
+    });
+
+    // When the game starts
+    socket.on('game_start', (data) => {
+        document.getElementById('join-game').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+        console.log('Game started with players:', data.players);
+    });
+
+    // Handle errors
+    socket.on('error', (data) => {
+        alert(data.message);
+    });
+});
+
 // Join game
 document.getElementById('join-btn').addEventListener('click', () => {
     username = document.getElementById('username').value;
