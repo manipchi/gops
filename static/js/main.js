@@ -60,27 +60,38 @@ socket.on('game_start', (data) => {
 
 socket.on('update_hand', (data) => {
     console.log('Received update_hand event:', data); // Debug log
-
     const handCardsDiv = document.getElementById('hand-cards');
-    handCardsDiv.innerHTML = ''; // Clear any existing cards
+    handCardsDiv.innerHTML = ''; // Clear existing cards
 
-    if (!data.hand || data.hand.length === 0) {
-        console.error('Received an empty hand:', data); // Debug
-        return;
-    }
+    let selectedCard = null; // Track the currently selected card
 
     data.hand.forEach((card) => {
         const cardElement = document.createElement('div');
         cardElement.classList.add('card');
         cardElement.textContent = card;
+
+        // Add click event for card selection
         cardElement.addEventListener('click', () => {
+            // Deselect previously selected card
+            if (selectedCard) {
+                selectedCard.classList.remove('selected');
+            }
+
+            // Select the new card
+            selectedCard = cardElement;
+            cardElement.classList.add('selected');
+
+            // Emit the selected card to the server
             socket.emit('select_card', { card });
+            console.log(`Selected card: ${card}`); // Debug log
         });
+
         handCardsDiv.appendChild(cardElement);
     });
 
     console.log('Updated hand displayed:', data.hand); // Debug log
 });
+
 
 
 

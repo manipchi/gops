@@ -129,7 +129,7 @@ def on_join():
 
 @socketio.on('select_card')
 def on_select_card(data):
-    username = data['username']
+    username = current_user.username
     card = int(data['card'])  # Convert card to integer
 
     # Find the game this player is in
@@ -173,13 +173,13 @@ def on_select_card(data):
                 for player in game.players:
                     hand = game.get_player_hand(player)
                     player_sid = game.player_sids[player]
-                    print(f"Sending hand to {player}: {hand}")  # Debug log
                     socketio.emit('update_hand', {'hand': hand}, to=player_sid)
 
+                # Send next prize card to the room
                 prize_card = game.next_prize_card()
                 accumulated_prizes = game.get_accumulated_prizes_display()
-                print(f"Prize card: {prize_card}, Accumulated prizes: {accumulated_prizes}")  # Debug log
                 socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
+
 
 
 @socketio.on('game_over')
