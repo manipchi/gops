@@ -55,6 +55,7 @@ socket.on('waiting', (data) => {
 socket.on('game_start', (data) => {
     document.getElementById('join-game').style.display = 'none';
     document.getElementById('play-section').style.display = 'block';
+    document.getElementById('game-over').style.display = 'none';
 });
 
 
