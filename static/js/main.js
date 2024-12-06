@@ -68,26 +68,29 @@ socket.on('game_start', (data) => {
 });
 
 socket.on('update_hand', (data) => {
+    console.log('Received update_hand event:', data); // Debug log
+
     const handCardsDiv = document.getElementById('hand-cards');
     handCardsDiv.innerHTML = ''; // Clear any existing cards
 
     if (!data.hand || data.hand.length === 0) {
-        console.error('Received an empty hand:', data); // Debugging
+        console.error('Received an empty hand:', data); // Debug
         return;
     }
 
     data.hand.forEach((card) => {
         const cardElement = document.createElement('div');
-        cardElement.classList.add('card'); // Add CSS styling class
-        cardElement.textContent = card; // Display the card value
+        cardElement.classList.add('card');
+        cardElement.textContent = card;
         cardElement.addEventListener('click', () => {
             socket.emit('select_card', { card });
         });
-        handCardsDiv.appendChild(cardElement); // Add to the DOM
+        handCardsDiv.appendChild(cardElement);
     });
 
-    console.log('Updated hand:', data.hand); // Debugging
+    console.log('Updated hand displayed:', data.hand); // Debug log
 });
+
 
 
 // Highlight selected card
@@ -100,18 +103,20 @@ function highlightSelectedCard(selectedBtn) {
 }
 
 socket.on('update_prize', (data) => {
+    console.log('Received update_prize event:', data); // Debug log
+
     const prizeCardElement = document.getElementById('prize-card');
     const accumulatedPrizesElement = document.getElementById('accumulated-prizes');
 
-    if (data.prize_card === null) {
-        console.error('Prize card is null:', data); // Debugging
+    if (!prizeCardElement || !accumulatedPrizesElement) {
+        console.error('Prize card or accumulated prizes elements are missing in the DOM.');
         return;
     }
 
     prizeCardElement.innerText = `Prize Card: ${data.prize_card}`;
     accumulatedPrizesElement.innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(', ')}`;
-    console.log('Updated prize card and accumulated prizes:', data); // Debugging
 });
+
 
 
 socket.on('round_result', (data) => {
