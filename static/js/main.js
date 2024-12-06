@@ -118,27 +118,16 @@ socket.on('update_prize', (data) => {
 
 
 socket.on('round_result', (data) => {
-    console.log('Round result received:', data); // Debug log
-
-    // Verify scores are present
-    if (!data.scores) {
-        console.error("Scores are undefined in round_result event:", data);
-        return;
-    }
-
-    const roundInfo = document.getElementById('round-info');
+    console.log('Round result received:', data); // Check logs
     const scoresElement = document.getElementById('scores');
-
-    // Update round info with the message and opponent card
-    roundInfo.textContent = `${data.message} Opponent played ${data.opponent_card}.`;
-
-    // Build scores string from the scores object
+    // Construct a scores display:
     let scoresText = "Scores: ";
     for (const [player, score] of Object.entries(data.scores)) {
         scoresText += `${player}: ${score} `;
     }
-    scoresElement.textContent = scoresText.trim(); // e.g. "Scores: player1: 10 player2: 0"
+    scoresElement.textContent = scoresText.trim();
 });
+
 
 
 

@@ -66,9 +66,11 @@ class Game:
         self.hands[player1].remove(card1)
         self.hands[player2].remove(card2)
 
-        # Determine round outcome
+        # Compare cards
         if card1 > card2:
-            # ...
+            total_prize = sum(self.accumulated_prizes)
+            self.scores[player1] += total_prize
+            self.accumulated_prizes = []
             result_player1 = {
                 'opponent_card': str(card2),
                 'your_card': str(card1),
@@ -82,7 +84,9 @@ class Game:
                 'scores': self.scores.copy()
             }
         elif card2 > card1:
-            # ...
+            total_prize = sum(self.accumulated_prizes)
+            self.scores[player2] += total_prize
+            self.accumulated_prizes = []
             result_player1 = {
                 'opponent_card': str(card2),
                 'your_card': str(card1),
@@ -96,7 +100,8 @@ class Game:
                 'scores': self.scores.copy()
             }
         else:
-            # Tie scenario
+            # It's a tie. We do NOT define total_prize here because no one wins it.
+            # The prize card is already in accumulated_prizes (from next_prize_card()).
             result_player1 = {
                 'opponent_card': str(card2),
                 'your_card': str(card1),
@@ -110,12 +115,10 @@ class Game:
                 'scores': self.scores.copy()
             }
 
-
             print(f"Tie! Accumulated prizes: {self.accumulated_prizes}")
 
-            # Check if this was the last card (no more prize_deck)
-            # If it's the last card and a tie, no one wins this final card
-            # Clear accumulated_prizes so the game can end properly
+            # If this was the last card and a tie, no one wins the final card.
+            # Clear accumulated_prizes if no more prize_deck remains.
             if not self.prize_deck:
                 self.accumulated_prizes = []
                 print("Final tie on the last card. No one gets the last card. Game ends.")
@@ -125,6 +128,7 @@ class Game:
 
         print(f"Scores after round: {self.scores}")
         return result_player1, result_player2
+
 
     def is_over(self):
         """
