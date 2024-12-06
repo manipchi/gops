@@ -51,25 +51,28 @@ socket.on('game_start', (data) => {
     document.getElementById('game-over').style.display = 'none';
 });
 
-// Update hand and other elements during the game
 socket.on('update_hand', (data) => {
-    const handDiv = document.getElementById('hand-cards');
-    handDiv.innerHTML = '';
+    const handCardsDiv = document.getElementById('hand-cards');
+    handCardsDiv.innerHTML = ''; // Clear any existing cards
 
-    data.hand.forEach(card => {
-        const btn = document.createElement('button');
-        btn.innerText = card;
-        btn.dataset.cardValue = card_to_value(card);
-        btn.classList.add('card-button');
-        btn.addEventListener('click', () => {
-            highlightSelectedCard(btn);
-            socket.emit('select_card', { username: username, card: btn.dataset.cardValue });
+    if (!data.hand || data.hand.length === 0) {
+        console.error('Received an empty hand:', data); // Debugging
+        return;
+    }
+
+    data.hand.forEach((card) => {
+        const cardElement = document.createElement('div');
+        cardElement.classList.add('card'); // Add CSS styling class
+        cardElement.textContent = card; // Display the card value
+        cardElement.addEventListener('click', () => {
+            socket.emit('select_card', { card });
         });
-        handDiv.appendChild(btn);
+        handCardsDiv.appendChild(cardElement); // Add to the DOM
     });
 
-    document.getElementById('your-hand').innerText = 'Your Hand:';
+    console.log('Updated hand:', data.hand); // Debugging
 });
+
 
 // Highlight selected card
 function highlightSelectedCard(selectedBtn) {
@@ -81,13 +84,19 @@ function highlightSelectedCard(selectedBtn) {
 }
 
 socket.on('update_prize', (data) => {
-    document.getElementById('prize-card').innerText = `Prize Card: ${data.prize_card}`;
-    if (data.accumulated_prizes && data.accumulated_prizes.length > 0) {
-        document.getElementById('accumulated-prizes').innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(', ')}`;
-    } else {
-        document.getElementById('accumulated-prizes').innerText = 'Accumulated Prizes: None';
+    const prizeCardElement = document.getElementById('prize-card');
+    const accumulatedPrizesElement = document.getElementById('accumulated-prizes');
+
+    if (data.prize_card === null) {
+        console.error('Prize card is null:', data); // Debugging
+        return;
     }
+
+    prizeCardElement.innerText = `Prize Card: ${data.prize_card}`;
+    accumulatedPrizesElement.innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(', ')}`;
+    console.log('Updated prize card and accumulated prizes:', data); // Debugging
 });
+
 
 socket.on('round_result', (data) => {
     const roundMessage = `${data.message}`;
