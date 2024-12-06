@@ -3,15 +3,8 @@ import random
 
 class Game:
     def __init__(self, room, players, sids):
-        """
-        Initialize the game instance.
-        Args:
-            room (str): Room identifier for the game.
-            players (list): List of player usernames.
-            sids (list): List of session IDs for the players.
-        """
         self.room = room
-        self.players = players  # List of player usernames
+        self.players = players
         self.player_sids = dict(zip(players, sids))  # Map usernames to session IDs
         self.hands = {player: self.create_deck() for player in players}
         self.scores = {player: 0 for player in players}
@@ -20,6 +13,12 @@ class Game:
         random.shuffle(self.prize_deck)
         self.accumulated_prizes = []
         self.current_prize_card = None
+
+        # Debug logs
+        print(f"Game initialized for room {self.room}")
+        print(f"Players: {self.players}")
+        print(f"Initial hands: {self.hands}")
+        print(f"Shuffled prize deck: {self.prize_deck}")
 
     def create_deck(self):
         """Create a standard deck of cards (1 to 13)."""
