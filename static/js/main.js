@@ -38,10 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.getElementById('return-home-btn').addEventListener('click', () => {
-    // Redirect to home page
-    window.location.href = "{{ url_for('index') }}";
+    const homeUrl = document.getElementById('return-home-btn').getAttribute('data-home-url');
+    window.location.href = homeUrl;
 });
-
 
 document.getElementById('join-btn').addEventListener('click', () => {
     console.log('Join Game button clicked.'); // Debug
