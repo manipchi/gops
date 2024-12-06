@@ -120,7 +120,8 @@ socket.on('update_prize', (data) => {
 socket.on('round_result', (data) => {
     console.log('Round result received:', data);
     const roundInfo = document.getElementById('round-info');
-    roundInfo.textContent = `${data.message} You played ${data.your_card}, Opponent played ${data.opponent_card}.`;
+    // Only show what the opponent played
+    roundInfo.textContent = `${data.message} Opponent played ${data.opponent_card}.`;
 
     const scoresElement = document.getElementById('scores');
     let scoresText = "Scores: ";
@@ -129,6 +130,7 @@ socket.on('round_result', (data) => {
     }
     scoresElement.textContent = scoresText.trim();
 });
+
 
 
 

@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, User
-from utils import calculate_elo
+from utils import calculate_elo, calculate_elo_tie
 
 
 app = Flask(__name__)
@@ -186,31 +186,32 @@ def on_select_card(data):
 @socketio.on('game_over')
 def handle_game_over(data):
     winner_username = data.get('winner')
-    players = data.get('players')
-    room = data.get('room')
-
-    if not winner_username or not players or not room:
-        return
+    players = data.get('players')  # [player1_username, player2_username]
 
     player1 = User.query.filter_by(username=players[0]).first()
     player2 = User.query.filter_by(username=players[1]).first()
 
     if not player1 or not player2:
+        print("Error: Could not find user records for Elo calculation.")
         return
 
-    # Update Elo ratings based on the game outcome
-    if winner_username == player1.username:
-        calculate_elo(player1, player2)
-    elif winner_username == player2.username:
-        calculate_elo(player2, player1)
+    if winner_username == 'Tie':
+        # Tie scenario: apply minimal Elo adjustments
+        calculate_elo_tie(player1, player2, k=16)
+    else:
+        # Winner-loser scenario
+        if winner_username == player1.username:
+            winner = player1
+            loser = player2
+        else:
+            winner = player2
+            loser = player1
+
+        calculate_elo(winner, loser, k=32)  # Or whatever k you use for normal updates
 
     db.session.commit()
+    print(f"Elo updated: {player1.username}: {player1.elo}, {player2.username}: {player2.elo}")
 
-    # Notify players of updated Elo ratings
-    socketio.emit('elo_update', {
-        'player1': {'username': player1.username, 'elo': player1.elo},
-        'player2': {'username': player2.username, 'elo': player2.elo}
-    }, room=room)
 
 
 @socketio.on('disconnect')
