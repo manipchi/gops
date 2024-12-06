@@ -36,15 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     
 });
-// Add event listener for "Return to Home" button
+
 document.getElementById('return-home-btn').addEventListener('click', () => {
-    document.getElementById('play-section').style.display = 'none';
-    document.getElementById('game-over-section').style.display = 'none';
-    document.getElementById('join-section').style.display = 'block';
-    // Clear waiting message if needed
-    const waitingMessage = document.getElementById('waiting-message');
-    if (waitingMessage) waitingMessage.innerText = '';
+    // Redirect to home page
+    window.location.href = "{{ url_for('index') }}";
 });
+
 
 document.getElementById('join-btn').addEventListener('click', () => {
     console.log('Join Game button clicked.'); // Debug
