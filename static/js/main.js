@@ -3,23 +3,16 @@ const socket = io();
 let username;
 
 document.addEventListener("DOMContentLoaded", () => {
-    const socket = io();
+    const socket = io(); // Connect to the WebSocket server
 
     document.getElementById('join-btn').addEventListener('click', () => {
-        const username = document.getElementById('username').value;
-
-        if (!username) {
-            alert('Please enter a username before joining the game.');
-            return;
-        }
-
-        console.log(`Attempting to join the game as: ${username}`); // Debug log
-        socket.emit('join', { username });
+        console.log('Attempting to join the game.'); // Debug
+        socket.emit('join'); // No need to send a username
     });
 
     socket.on('waiting', (data) => {
         document.getElementById('waiting-message').innerText = data.message;
-        console.log('Waiting for another player:', data.message); // Debug log
+        console.log('Waiting message received:', data.message); // Debug
     });
 
     socket.on('game_start', (data) => {
@@ -30,8 +23,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     socket.on('error', (data) => {
         alert(data.message);
+        console.log('Error message received:', data.message); // Debug
     });
 });
+
 
 
 // Join game

@@ -80,17 +80,18 @@ def leaderboard():
     return render_template('leaderboard.html', users=users)
 
 @socketio.on('join')
-def on_join(data):
+def on_join():
     global waiting_player
-    username = data.get('username')
-    sid = request.sid  # Get the session ID of the player
 
-    if not username:
-        emit('error', {'message': 'Username is required to join a game.'}, to=sid)
-        print("Join event failed: Username not provided.")  # Debug log
+    if not current_user.is_authenticated:
+        emit('error', {'message': 'You must be logged in to join a game.'}, to=request.sid)
+        print("Join event failed: User not logged in.")  # Debug log
         return
 
-    print(f"Player {username} (SID: {sid}) is attempting to join...")  # Debug log
+    username = current_user.username
+    sid = request.sid  # Get the session ID of the player
+
+    print(f"Player {username} (SID: {sid}) is attempting to join.")  # Debug log
 
     if waiting_player and waiting_player['sid'] == sid:
         emit('error', {'message': 'You cannot join a game against yourself.'}, to=sid)
@@ -110,13 +111,28 @@ def on_join(data):
 
         room = f'room_{player1}_{player2}'
 
+        # Make both players join the room
         socketio.server.enter_room(player1_sid, room)
         socketio.server.enter_room(player2_sid, room)
 
+        # Notify both players
         socketio.emit('game_start', {'players': [player1, player2]}, room=room)
         print(f"Game started between {player1} and {player2} in room {room}.")  # Debug log
 
+        # Start the game
+        game = Game(room, [player1, player2], [player1_sid, player2_sid])
+        games[room] = game
 
+        # Send initial game state to both players individually
+        for player in game.players:
+            hand = game.get_player_hand(player)
+            player_sid = game.player_sids[player]
+            socketio.emit('update_hand', {'hand': hand}, to=player_sid)
+
+        # Draw the first prize card
+        prize_card = game.next_prize_card()
+        accumulated_prizes = game.get_accumulated_prizes_display()
+        socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
 
 @socketio.on('select_card')
 def on_select_card(data):
