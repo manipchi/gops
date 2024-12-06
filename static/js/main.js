@@ -54,9 +54,9 @@ socket.on('waiting', (data) => {
 // Start game
 socket.on('game_start', (data) => {
     document.getElementById('join-game').style.display = 'none';
-    document.getElementById('game').style.display = 'block';
-    document.getElementById('game-over').style.display = 'none';
+    document.getElementById('play-section').style.display = 'block';
 });
+
 
 socket.on('update_hand', (data) => {
     console.log('Received update_hand event:', data); // Debug log
