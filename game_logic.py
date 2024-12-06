@@ -21,12 +21,7 @@ class Game:
 
     def create_deck(self):
         """Create a standard deck of cards as numbers 1-13."""
-        return list(range(1, 14))  # 1-13 where 1=A, 11=J, 12=Q, 13=K
-
-    def display_card(self, card):
-        """Convert a numerical card to its display value (A, 2-10, J, Q, K)."""
-        display_map = {1: 'A', 11: 'J', 12: 'Q', 13: 'K'}
-        return display_map.get(card, str(card))  # Default to the number as a string
+        return list(range(1, 14))  # 1-13
 
     def next_prize_card(self):
         """
@@ -53,7 +48,6 @@ class Game:
             self.selected_cards[player] = card
             print(f"{player} selected card {card}. Selected cards: {self.selected_cards}")  # Debug log
 
-
     def both_players_selected(self):
         """
         Check if both players have selected their cards.
@@ -61,7 +55,6 @@ class Game:
             bool: True if both players have selected a card, False otherwise.
         """
         return all(card is not None for card in self.selected_cards.values())
-
 
     def resolve_round(self):
         player1, player2 = self.players
@@ -79,14 +72,14 @@ class Game:
             self.scores[player1] += total_prize
             self.accumulated_prizes = []
             result_player1 = {
-                'opponent_card': self.display_card(card2),
-                'your_card': self.display_card(card1),
+                'opponent_card': str(card2),
+                'your_card': str(card1),
                 'message': f"You win the prize worth {total_prize}!",
                 'scores': self.scores.copy()
             }
             result_player2 = {
-                'opponent_card': self.display_card(card1),
-                'your_card': self.display_card(card2),
+                'opponent_card': str(card1),
+                'your_card': str(card2),
                 'message': f"Your opponent wins the prize worth {total_prize}!",
                 'scores': self.scores.copy()
             }
@@ -95,28 +88,28 @@ class Game:
             self.scores[player2] += total_prize
             self.accumulated_prizes = []
             result_player1 = {
-                'opponent_card': self.display_card(card2),
-                'your_card': self.display_card(card1),
+                'opponent_card': str(card2),
+                'your_card': str(card1),
                 'message': f"Your opponent wins the prize worth {total_prize}!",
                 'scores': self.scores.copy()
             }
             result_player2 = {
-                'opponent_card': self.display_card(card1),
-                'your_card': self.display_card(card2),
+                'opponent_card': str(card1),
+                'your_card': str(card2),
                 'message': f"You win the prize worth {total_prize}!",
                 'scores': self.scores.copy()
             }
         else:
             self.accumulated_prizes.append(self.current_prize_card)
             result_player1 = {
-                'opponent_card': self.display_card(card2),
-                'your_card': self.display_card(card1),
+                'opponent_card': str(card2),
+                'your_card': str(card1),
                 'message': "It's a tie! The prize cards accumulate.",
                 'scores': self.scores.copy()
             }
             result_player2 = {
-                'opponent_card': self.display_card(card1),
-                'your_card': self.display_card(card2),
+                'opponent_card': str(card1),
+                'your_card': str(card2),
                 'message': "It's a tie! The prize cards accumulate.",
                 'scores': self.scores.copy()
             }
@@ -127,7 +120,6 @@ class Game:
 
         print(f"Scores after round: {self.scores}")  # Debug log
         return result_player1, result_player2
-
 
     def is_over(self):
         """
@@ -152,21 +144,19 @@ class Game:
 
     def get_player_hand(self, player):
         """
-        Get the player's current hand as display-friendly values.
+        Get the player's current hand.
         Args:
             player (str): The username of the player.
         Returns:
-            list: The player's hand as display values.
+            list: The player's hand as strings for display.
         """
         print(f"Hand for {player}: {self.hands[player]}")  # Debug log
-        return [self.display_card(card) for card in self.hands[player]]
-
+        return [str(card) for card in self.hands[player]]
 
     def get_accumulated_prizes_display(self):
         """
         Get a display-friendly version of the accumulated prizes.
         Returns:
-            list: The accumulated prizes as display values.
+            list: The accumulated prizes as strings.
         """
-        return [self.display_card(card) for card in self.accumulated_prizes]
-
+        return [str(card) for card in self.accumulated_prizes]
