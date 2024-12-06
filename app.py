@@ -112,17 +112,17 @@ def on_join():
         game = Game(room, [player1, player2], [player1_sid, player2_sid])
         games[room] = game
 
-        # Send initial hands and prize card
+       # Emit updated hands for each player
         for player in game.players:
             hand = game.get_player_hand(player)
             player_sid = game.player_sids[player]
-            print(f"Sending hand to {player}: {hand}")  # Debug log
             socketio.emit('update_hand', {'hand': hand}, to=player_sid)
 
+        # Emit the next prize card
         prize_card = game.next_prize_card()
         accumulated_prizes = game.get_accumulated_prizes_display()
-        print(f"Prize card: {prize_card}, Accumulated prizes: {accumulated_prizes}")  # Debug log
         socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
+
 
 
 
@@ -130,7 +130,7 @@ def on_join():
 @socketio.on('select_card')
 def on_select_card(data):
     username = current_user.username
-    card = int(data['card'])  # Convert card to integer
+    card = data['card']
 
     # Find the game this player is in
     room = None
@@ -139,46 +139,46 @@ def on_select_card(data):
             room = game_room
             break
 
-    if room is None:
+    if not room:
         emit('error', {'message': 'Game not found.'}, to=request.sid)
         return
 
     game = games.get(room)
-    if game:
-        game.update_selected_card(username, card)
+    game.update_selected_card(username, card)
 
-        # Check if both players have made a selection
-        if game.both_players_selected():
-            # Process the round and get personalized results
-            result_player1, result_player2 = game.resolve_round()
+    # Check if both players have made a selection
+    if game.both_players_selected():
+        print(f"Both players have selected: {game.selected_cards}")  # Debug log
 
-            # Send results to each player
-            player1_sid = game.player_sids[game.players[0]]
-            player2_sid = game.player_sids[game.players[1]]
+        # Process the round
+        result_player1, result_player2 = game.resolve_round()
 
-            socketio.emit('round_result', result_player1, to=player1_sid)
-            socketio.emit('round_result', result_player2, to=player2_sid)
+        # Emit round results
+        player1_sid = game.player_sids[game.players[0]]
+        player2_sid = game.player_sids[game.players[1]]
 
-            # Clear selected cards for the next round
-            game.clear_selected_cards()
+        socketio.emit('round_result', result_player1, to=player1_sid)
+        socketio.emit('round_result', result_player2, to=player2_sid)
 
-            # Check if the game is over
-            if game.is_over():
-                game_details = game.get_game_over_details()
-                socketio.emit('game_over', game_details, room=room)
-                # Clean up
-                del games[room]
-            else:
-                # Send updated hands to each player individually
-                for player in game.players:
-                    hand = game.get_player_hand(player)
-                    player_sid = game.player_sids[player]
-                    socketio.emit('update_hand', {'hand': hand}, to=player_sid)
+        # Check if the game is over
+        if game.is_over():
+            game_details = {
+                'winner': game.get_winner(),
+                'final_scores': game.scores
+            }
+            socketio.emit('game_over', game_details, room=room)
+            del games[room]  # Clean up the game
+        else:
+            # Emit updated hands and next prize card
+            for player in game.players:
+                hand = game.get_player_hand(player)
+                player_sid = game.player_sids[player]
+                socketio.emit('update_hand', {'hand': hand}, to=player_sid)
 
-                # Send next prize card to the room
-                prize_card = game.next_prize_card()
-                accumulated_prizes = game.get_accumulated_prizes_display()
-                socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
+            prize_card = game.next_prize_card()
+            accumulated_prizes = game.get_accumulated_prizes_display()
+            socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
+
 
 
 

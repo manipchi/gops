@@ -55,6 +55,7 @@ class Game:
         """
         return all(card is not None for card in self.selected_cards.values())
 
+
     def resolve_round(self):
         player1, player2 = self.players
 
