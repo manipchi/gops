@@ -4,16 +4,16 @@ class Game:
     def __init__(self, room, players, sids):
         self.room = room
         self.players = players
-        self.player_sids = dict(zip(players, sids))  # Map usernames to session IDs
-        self.hands = {player: self.create_deck() for player in players}  # Generate hands
-        self.scores = {player: 0 for player in players}  # Initialize scores
+        self.player_sids = dict(zip(players, sids))
+        self.hands = {player: self.create_deck() for player in players}
+        self.scores = {player: 0 for player in players}
         self.selected_cards = {player: None for player in players}
-        self.prize_deck = self.create_deck()  # Generate prize deck
-        random.shuffle(self.prize_deck)  # Shuffle the prize deck
+        self.prize_deck = self.create_deck()
+        random.shuffle(self.prize_deck)
         self.accumulated_prizes = []
         self.current_prize_card = None
 
-        # Debugging logs
+        # Debug logs
         print(f"Game initialized for room {self.room}")
         print(f"Players: {self.players}")
         print(f"Initial hands: {self.hands}")
@@ -21,7 +21,7 @@ class Game:
 
     def create_deck(self):
         """Create a standard deck of cards as numbers 1-13."""
-        return list(range(1, 14))  # 1-13
+        return list(range(1, 14))  # Cards are 1 through 13
 
     def next_prize_card(self):
         """
@@ -32,9 +32,9 @@ class Game:
         if self.prize_deck:
             self.current_prize_card = self.prize_deck.pop(0)
             self.accumulated_prizes.append(self.current_prize_card)
-            print(f"Next prize card: {self.current_prize_card}, Accumulated prizes: {self.accumulated_prizes}")  # Debug log
+            print(f"Next prize card: {self.current_prize_card}, Accumulated prizes: {self.accumulated_prizes}")
             return self.current_prize_card
-        print("No more prize cards in the deck.")  # Debug log
+        print("No more prize cards in the deck.")
         return None
 
     def update_selected_card(self, player, card):
@@ -46,7 +46,7 @@ class Game:
         """
         if card in self.hands[player]:
             self.selected_cards[player] = card
-            print(f"{player} selected card {card}. Selected cards: {self.selected_cards}")  # Debug log
+            print(f"{player} selected card {card}. Selected cards: {self.selected_cards}")
 
     def both_players_selected(self):
         """
@@ -100,7 +100,9 @@ class Game:
                 'scores': self.scores.copy()
             }
         else:
-            self.accumulated_prizes.append(self.current_prize_card)
+            # It's a tie!
+            # The card has already been added to accumulated_prizes by next_prize_card().
+            # No extra append. Just accumulate as is.
             result_player1 = {
                 'opponent_card': str(card2),
                 'your_card': str(card1),
@@ -113,12 +115,20 @@ class Game:
                 'message': "It's a tie! The prize cards accumulate.",
                 'scores': self.scores.copy()
             }
-            print(f"Tie! Accumulated prizes: {self.accumulated_prizes}")  # Debug log
+
+            print(f"Tie! Accumulated prizes: {self.accumulated_prizes}")
+
+            # Check if this was the last card (no more prize_deck)
+            # If it's the last card and a tie, no one wins this final card
+            # Clear accumulated_prizes so the game can end properly
+            if not self.prize_deck:
+                self.accumulated_prizes = []
+                print("Final tie on the last card. No one gets the last card. Game ends.")
 
         # Reset selected cards for the next round
         self.selected_cards = {player: None for player in self.players}
 
-        print(f"Scores after round: {self.scores}")  # Debug log
+        print(f"Scores after round: {self.scores}")
         return result_player1, result_player2
 
     def is_over(self):
@@ -144,13 +154,13 @@ class Game:
 
     def get_player_hand(self, player):
         """
-        Get the player's current hand.
+        Get the player's current hand as strings.
         Args:
             player (str): The username of the player.
-        Returns:
-            list: The player's hand as strings for display.
+            Returns:
+                list: The player's hand as strings.
         """
-        print(f"Hand for {player}: {self.hands[player]}")  # Debug log
+        print(f"Hand for {player}: {self.hands[player]}")
         return [str(card) for card in self.hands[player]]
 
     def get_accumulated_prizes_display(self):
