@@ -49,15 +49,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-// Join game
 document.getElementById('join-btn').addEventListener('click', () => {
-    username = document.getElementById('username').value;
-
-    if (username) {
-        socket.emit('join', { username: username });
-        document.getElementById('waiting-message').innerText = "Looking for a match...";
-    }
+    console.log('Join Game button clicked.'); // Debug
+    socket.emit('join'); // Emit the event without sending a username
 });
+
 
 // Handle waiting message
 socket.on('waiting', (data) => {
