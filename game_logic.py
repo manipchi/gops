@@ -68,9 +68,7 @@ class Game:
 
         # Determine round outcome
         if card1 > card2:
-            total_prize = sum(self.accumulated_prizes)
-            self.scores[player1] += total_prize
-            self.accumulated_prizes = []
+            # ...
             result_player1 = {
                 'opponent_card': str(card2),
                 'your_card': str(card1),
@@ -84,9 +82,7 @@ class Game:
                 'scores': self.scores.copy()
             }
         elif card2 > card1:
-            total_prize = sum(self.accumulated_prizes)
-            self.scores[player2] += total_prize
-            self.accumulated_prizes = []
+            # ...
             result_player1 = {
                 'opponent_card': str(card2),
                 'your_card': str(card1),
@@ -100,9 +96,7 @@ class Game:
                 'scores': self.scores.copy()
             }
         else:
-            # It's a tie!
-            # The card has already been added to accumulated_prizes by next_prize_card().
-            # No extra append. Just accumulate as is.
+            # Tie scenario
             result_player1 = {
                 'opponent_card': str(card2),
                 'your_card': str(card1),
@@ -115,6 +109,7 @@ class Game:
                 'message': "It's a tie! The prize cards accumulate.",
                 'scores': self.scores.copy()
             }
+
 
             print(f"Tie! Accumulated prizes: {self.accumulated_prizes}")
 
