@@ -33,8 +33,11 @@ class Game:
         if self.prize_deck:
             self.current_prize_card = self.prize_deck.pop(0)
             self.accumulated_prizes.append(self.current_prize_card)
+            print(f"Next prize card: {self.current_prize_card}, Accumulated prizes: {self.accumulated_prizes}")  # Debug log
             return self.current_prize_card
+        print("No more prize cards in the deck.")  # Debug log
         return None
+
 
     def update_selected_card(self, player, card):
         """
@@ -130,10 +133,12 @@ class Game:
         Get the player's current hand.
         Args:
             player (str): The username of the player.
-        Returns:
-            list: The player's hand.
+            Returns:
+                list: The player's hand.
         """
+        print(f"Hand for {player}: {self.hands[player]}")  # Debug log
         return self.hands[player]
+
 
     def get_accumulated_prizes_display(self):
         """
