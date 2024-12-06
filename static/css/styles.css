@@ -74,8 +74,8 @@ button:hover {
     margin: 5px;
     border: 1px solid black;
     border-radius: 5px;
-    background-color: #37A908; /* Default green */
-    color: white;
+    background-color: white; /* Default white for unselected cards */
+    color: black; /* Text color for white cards */
     font-family: 'Roboto Mono', monospace;
     font-size: 20px;
     text-align: center;
@@ -86,13 +86,12 @@ button:hover {
 }
 
 .card:hover {
-    background-color: #2e8b07; /* Darker green on hover */
+    background-color: #f0f0f0; /* Light gray on hover */
 }
 
 .card.selected {
-    background-color: #ffcc00; /* Highlight selected card in yellow */
-    color: black;
+    background-color: #37A908; /* Green for selected cards */
+    color: white;
     font-weight: bold;
 }
-
 
