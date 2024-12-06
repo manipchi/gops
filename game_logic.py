@@ -21,8 +21,9 @@ class Game:
         print(f"Shuffled prize deck: {self.prize_deck}")
 
     def create_deck(self):
-        """Create a standard deck of cards (1 to 13)."""
-        return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+        """Create a standard deck of cards with A, 2-10, J, Q, K."""
+        return ['A', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K']
+
     
     def next_prize_card(self):
         """
@@ -58,14 +59,17 @@ class Game:
         return all(card is not None for card in self.selected_cards.values())
 
     def resolve_round(self):
-        """
-        Resolve the current round and update the game state.
-        Returns:
-            tuple: Results for player1 and player2.
-        """
         player1, player2 = self.players
+
+        # Map face cards to numerical values
+        value_map = {'A': 1, 'J': 11, 'Q': 12, 'K': 13}
+
         card1 = self.selected_cards[player1]
         card2 = self.selected_cards[player2]
+
+        # Convert face cards to numerical values for comparison
+        value1 = value_map.get(card1, card1)  # Use card1 if it's already a number
+        value2 = value_map.get(card2, card2)  # Use card2 if it's already a number
 
         # Remove the selected cards from the players' hands
         self.hands[player1].remove(card1)
@@ -102,10 +106,10 @@ class Game:
             result_player1['message'] = "It's a tie! The prize cards accumulate."
             result_player2['message'] = "It's a tie! The prize cards accumulate."
 
-        # Clear selected cards for the next round
-        self.selected_cards = {player: None for player in self.players}
+        print(f"Scores after round: {self.scores}")  # Debug log
 
         return result_player1, result_player2
+
 
     def is_over(self):
         """

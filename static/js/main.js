@@ -69,25 +69,21 @@ socket.on('update_hand', (data) => {
         const cardElement = document.createElement('div');
         cardElement.classList.add('card');
         cardElement.textContent = card;
-
+    
         // Add click event for card selection
         cardElement.addEventListener('click', () => {
-            // Deselect previously selected card
             if (selectedCard) {
-                selectedCard.classList.remove('selected');
+                selectedCard.classList.remove('selected'); // Remove highlight from previously selected card
             }
-
-            // Select the new card
             selectedCard = cardElement;
-            cardElement.classList.add('selected');
-
-            // Emit the selected card to the server
-            socket.emit('select_card', { card });
-            console.log(`Selected card: ${card}`); // Debug log
+            cardElement.classList.add('selected'); // Highlight the current selection
+            socket.emit('select_card', { card }); // Notify server of selected card
+            console.log(`Selected card: ${card}`);
         });
-
+    
         handCardsDiv.appendChild(cardElement);
     });
+    
 
     console.log('Updated hand displayed:', data.hand); // Debug log
 });
