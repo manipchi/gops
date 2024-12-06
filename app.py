@@ -163,9 +163,11 @@ def on_select_card(data):
             else:
                 # Send updated hands to each player individually
                 for player in game.players:
-                    hand = game.get_player_hand(player)
+                    hand = game.get_player_hand(player)  # Fetch the player's hand
                     player_sid = game.player_sids[player]
+                    print(f"Sending hand to {player}: {hand}")  # Debug log
                     socketio.emit('update_hand', {'hand': hand}, to=player_sid)
+
 
                 # Send next prize card to the room
                 prize_card = game.next_prize_card()

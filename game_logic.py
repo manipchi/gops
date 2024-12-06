@@ -6,15 +6,15 @@ class Game:
         self.room = room
         self.players = players
         self.player_sids = dict(zip(players, sids))  # Map usernames to session IDs
-        self.hands = {player: self.create_deck() for player in players}
+        self.hands = {player: self.create_deck() for player in players}  # Generate hands
         self.scores = {player: 0 for player in players}
         self.selected_cards = {player: None for player in players}
-        self.prize_deck = self.create_deck()
-        random.shuffle(self.prize_deck)
+        self.prize_deck = self.create_deck()  # Generate prize deck
+        random.shuffle(self.prize_deck)  # Shuffle the prize deck
         self.accumulated_prizes = []
         self.current_prize_card = None
 
-        # Debug logs
+        # Debugging logs
         print(f"Game initialized for room {self.room}")
         print(f"Players: {self.players}")
         print(f"Initial hands: {self.hands}")
@@ -23,7 +23,7 @@ class Game:
     def create_deck(self):
         """Create a standard deck of cards (1 to 13)."""
         return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-
+    
     def next_prize_card(self):
         """
         Draw the next prize card from the deck and add it to accumulated prizes.
