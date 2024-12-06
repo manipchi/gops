@@ -51,6 +51,8 @@ class Game:
         """
         if card in self.hands[player]:
             self.selected_cards[player] = card
+            print(f"{player} selected card {card}. Selected cards: {self.selected_cards}")  # Debug log
+
 
     def both_players_selected(self):
         """

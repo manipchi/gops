@@ -130,7 +130,7 @@ def on_join():
 @socketio.on('select_card')
 def on_select_card(data):
     username = current_user.username
-    card = data['card']
+    card = int(data['card'])
 
     # Find the game this player is in
     room = None
@@ -146,7 +146,9 @@ def on_select_card(data):
     game = games.get(room)
     game.update_selected_card(username, card)
 
-    # Check if both players have made a selection
+    print(f"Player {username} selected card: {card}")  # Debug log
+
+    # Check if both players have selected their cards
     if game.both_players_selected():
         print(f"Both players have selected: {game.selected_cards}")  # Debug log
 
@@ -162,6 +164,7 @@ def on_select_card(data):
 
         # Check if the game is over
         if game.is_over():
+            print("Game over.")  # Debug log
             game_details = {
                 'winner': game.get_winner(),
                 'final_scores': game.scores
