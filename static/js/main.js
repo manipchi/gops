@@ -6,18 +6,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const socket = io();
 
     socket.on('update_hand', (data) => {
+        console.log('Received update_hand event:', data); // Debug log
         const handCardsDiv = document.getElementById('hand-cards');
-        if (!handCardsDiv) {
-            console.error('hand-cards element not found in the DOM.'); // Debug log
-            return;
-        }
         handCardsDiv.innerHTML = ''; // Clear existing cards
-
+    
         if (!data.hand || data.hand.length === 0) {
-            console.error('Received an empty hand:', data); // Debug log
+            console.error('Received an empty hand:', data); // Debug
             return;
         }
-
+    
         data.hand.forEach((card) => {
             const cardElement = document.createElement('div');
             cardElement.classList.add('card');
@@ -27,23 +24,17 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             handCardsDiv.appendChild(cardElement);
         });
-
-        console.log('Updated hand:', data.hand); // Debug log
+    
+        console.log('Updated hand displayed:', data.hand); // Debug log
     });
+    
 
     socket.on('update_prize', (data) => {
-        const prizeCardElement = document.getElementById('prize-card');
-        const accumulatedPrizesElement = document.getElementById('accumulated-prizes');
-
-        if (!prizeCardElement || !accumulatedPrizesElement) {
-            console.error('Prize card or accumulated prizes elements are missing in the DOM.'); // Debug log
-            return;
-        }
-
-        prizeCardElement.innerText = `Prize Card: ${data.prize_card}`;
-        accumulatedPrizesElement.innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(', ')}`;
-        console.log('Updated prize card and accumulated prizes:', data); // Debug log
+        console.log('Received update_prize event:', data); // Debug log
+        document.getElementById('prize-card').innerText = `Prize Card: ${data.prize_card}`;
+        document.getElementById('accumulated-prizes').innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(', ')}`;
     });
+    
 });
 
 

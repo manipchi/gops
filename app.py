@@ -168,12 +168,11 @@ def on_select_card(data):
                     print(f"Sending hand to {player}: {hand}")  # Debug log
                     socketio.emit('update_hand', {'hand': hand}, to=player_sid)
 
-
-
-                # Send next prize card to the room
                 prize_card = game.next_prize_card()
                 accumulated_prizes = game.get_accumulated_prizes_display()
+                print(f"Prize card: {prize_card}, Accumulated prizes: {accumulated_prizes}")  # Debug log
                 socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
+
 
 @socketio.on('game_over')
 def handle_game_over(data):
