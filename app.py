@@ -164,15 +164,41 @@ def on_select_card(data):
 
         # Check if the game is over
         if game.is_over():
+            winner_username = game.get_winner()
+            players = game.players
+
+            player1 = User.query.filter_by(username=players[0]).first()
+            player2 = User.query.filter_by(username=players[1]).first()
+
+            if not player1 or not player2:
+                print("Error: Could not find user records for Elo calculation.")
+            else:
+                print(f"Game ended. Winner: {winner_username}. Updating Elo...")
+
+                if winner_username == 'Tie':
+                    # Tie logic
+                    calculate_elo_tie(player1, player2, k=16)
+                else:
+                    # Winner-loser logic
+                    if winner_username == player1.username:
+                        winner, loser = player1, player2
+                    else:
+                        winner, loser = player2, player1
+                    calculate_elo(winner, loser, k=32)
+
+                db.session.commit()
+                print(f"Elo updated: {player1.username}: {player1.elo}, {player2.username}: {player2.elo}")
+
+            # Now emit the event to the clients if you want them to know the game ended
             game_details = {
-                'winner': game.get_winner(),
-                'players': game.players,  # e.g. ['manipchi', 'manipchi2']
+                'winner': winner_username,
+                'players': players,
                 'final_scores': game.scores
             }
-            print("Game ended. Emitting game_over event now.")  # Debug log
             socketio.emit('game_over', game_details, room=room)
+            print("Game over event emitted to clients.")
             del games[room]
-            print("Game over event emitted.")  # Debug log
+
 
         else:
             # Emit updated hands and next prize card
@@ -184,35 +210,6 @@ def on_select_card(data):
             prize_card = game.next_prize_card()
             accumulated_prizes = game.get_accumulated_prizes_display()
             socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
-
-
-@socketio.on('game_over')
-def handle_game_over(data):
-    print("Game over event received.")  # Debug log
-    winner_username = data.get('winner')
-    players = data.get('players')
-
-    player1 = User.query.filter_by(username=players[0]).first()
-    player2 = User.query.filter_by(username=players[1]).first()
-
-    if not player1 or not player2:
-        print("Error: Could not find user records for Elo calculation.")
-        return
-
-    print(f"Winner: {winner_username}, Players: {players}")
-    print(f"Current Elos before update: {player1.username}: {player1.elo}, {player2.username}: {player2.elo}")
-
-    if winner_username == 'Tie':
-        calculate_elo_tie(player1, player2, k=16)
-    else:
-        if winner_username == player1.username:
-            winner, loser = player1, player2
-        else:
-            winner, loser = player2, player1
-        calculate_elo(winner, loser, k=32)
-
-    db.session.commit()
-    print(f"Elo updated: {player1.username}: {player1.elo}, {player2.username}: {player2.elo}")
 
 @socketio.on('disconnect')
 def on_disconnect():
