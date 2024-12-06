@@ -118,11 +118,10 @@ socket.on('update_prize', (data) => {
 
 
 socket.on('round_result', (data) => {
+    console.log('Round result received:', data);
     const roundInfo = document.getElementById('round-info');
-    // Now show what you played and what your opponent played
     roundInfo.textContent = `${data.message} You played ${data.your_card}, Opponent played ${data.opponent_card}.`;
-    
-    // If you're handling scores as well:
+
     const scoresElement = document.getElementById('scores');
     let scoresText = "Scores: ";
     for (const [player, score] of Object.entries(data.scores)) {
@@ -130,6 +129,7 @@ socket.on('round_result', (data) => {
     }
     scoresElement.textContent = scoresText.trim();
 });
+
 
 
 

@@ -66,17 +66,19 @@ class Game:
         self.hands[player1].remove(card1)
         self.hands[player2].remove(card2)
 
-        # Compare cards
+        # Determine the outcome and construct results for each player
         if card1 > card2:
             total_prize = sum(self.accumulated_prizes)
             self.scores[player1] += total_prize
             self.accumulated_prizes = []
+            # From player1's perspective: your_card=card1, opponent_card=card2
             result_player1 = {
                 'opponent_card': str(card2),
                 'your_card': str(card1),
                 'message': f"You win the prize worth {total_prize}!",
                 'scores': self.scores.copy()
             }
+            # From player2's perspective: your_card=card2, opponent_card=card1
             result_player2 = {
                 'opponent_card': str(card1),
                 'your_card': str(card2),
@@ -87,12 +89,14 @@ class Game:
             total_prize = sum(self.accumulated_prizes)
             self.scores[player2] += total_prize
             self.accumulated_prizes = []
+            # Player1 sees your_card=card1, opponent_card=card2
             result_player1 = {
                 'opponent_card': str(card2),
                 'your_card': str(card1),
                 'message': f"Your opponent wins the prize worth {total_prize}!",
                 'scores': self.scores.copy()
             }
+            # Player2 sees your_card=card2, opponent_card=card1
             result_player2 = {
                 'opponent_card': str(card1),
                 'your_card': str(card2),
@@ -100,8 +104,8 @@ class Game:
                 'scores': self.scores.copy()
             }
         else:
-            # It's a tie. We do NOT define total_prize here because no one wins it.
-            # The prize card is already in accumulated_prizes (from next_prize_card()).
+            # It's a tie
+            # Just accumulate the prizes from the current card already added during next_prize_card
             result_player1 = {
                 'opponent_card': str(card2),
                 'your_card': str(card1),
@@ -117,17 +121,17 @@ class Game:
 
             print(f"Tie! Accumulated prizes: {self.accumulated_prizes}")
 
-            # If this was the last card and a tie, no one wins the final card.
-            # Clear accumulated_prizes if no more prize_deck remains.
+            # If this was the last card and a tie, no one gets this final card
             if not self.prize_deck:
                 self.accumulated_prizes = []
                 print("Final tie on the last card. No one gets the last card. Game ends.")
 
-        # Reset selected cards for the next round
+            # Reset selected cards for the next round
         self.selected_cards = {player: None for player in self.players}
 
         print(f"Scores after round: {self.scores}")
         return result_player1, result_player2
+
 
 
     def is_over(self):
