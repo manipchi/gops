@@ -166,13 +166,14 @@ def on_select_card(data):
         if game.is_over():
             game_details = {
                 'winner': game.get_winner(),
-                'final_scores': game.scores,
-                'players': game.players
+                'players': game.players,  # e.g. ['manipchi', 'manipchi2']
+                'final_scores': game.scores
             }
-            # Emit the game_over event so that handle_game_over can do the Elo updates
+            print("Game ended. Emitting game_over event now.")  # Debug log
             socketio.emit('game_over', game_details, room=room)
             del games[room]
-            print("Game over.")
+            print("Game over event emitted.")  # Debug log
+
         else:
             # Emit updated hands and next prize card
             for player in game.players:
@@ -187,8 +188,9 @@ def on_select_card(data):
 
 @socketio.on('game_over')
 def handle_game_over(data):
+    print("Game over event received.")  # Debug log
     winner_username = data.get('winner')
-    players = data.get('players')  # e.g. [player1_username, player2_username]
+    players = data.get('players')
 
     player1 = User.query.filter_by(username=players[0]).first()
     player2 = User.query.filter_by(username=players[1]).first()
@@ -197,14 +199,12 @@ def handle_game_over(data):
         print("Error: Could not find user records for Elo calculation.")
         return
 
-    print(f"Game over event received. Winner: {winner_username}, Players: {players}")
+    print(f"Winner: {winner_username}, Players: {players}")
     print(f"Current Elos before update: {player1.username}: {player1.elo}, {player2.username}: {player2.elo}")
 
     if winner_username == 'Tie':
-        # Tie scenario: minimal Elo changes
         calculate_elo_tie(player1, player2, k=16)
     else:
-        # Identify winner and loser
         if winner_username == player1.username:
             winner, loser = player1, player2
         else:
@@ -212,10 +212,7 @@ def handle_game_over(data):
         calculate_elo(winner, loser, k=32)
 
     db.session.commit()
-
     print(f"Elo updated: {player1.username}: {player1.elo}, {player2.username}: {player2.elo}")
-
-
 
 @socketio.on('disconnect')
 def on_disconnect():
