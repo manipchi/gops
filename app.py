@@ -188,7 +188,8 @@ def on_select_card(data):
 @socketio.on('game_over')
 def handle_game_over(data):
     winner_username = data.get('winner')
-    players = data.get('players')
+    players = data.get('players')  # e.g. [player1_username, player2_username]
+
     player1 = User.query.filter_by(username=players[0]).first()
     player2 = User.query.filter_by(username=players[1]).first()
 
@@ -196,12 +197,14 @@ def handle_game_over(data):
         print("Error: Could not find user records for Elo calculation.")
         return
 
-    print(f"Game over event received. Winner: {winner_username}. Players: {players}")
+    print(f"Game over event received. Winner: {winner_username}, Players: {players}")
     print(f"Current Elos before update: {player1.username}: {player1.elo}, {player2.username}: {player2.elo}")
 
     if winner_username == 'Tie':
+        # Tie scenario: minimal Elo changes
         calculate_elo_tie(player1, player2, k=16)
     else:
+        # Identify winner and loser
         if winner_username == player1.username:
             winner, loser = player1, player2
         else:
