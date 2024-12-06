@@ -188,6 +188,10 @@ def handle_game_over(data):
     winner_username = data.get('winner')
     players = data.get('players')  # [player1_username, player2_username]
 
+    if not players or len(players) < 2:
+        print("Error: Not enough players data received.")
+        return
+
     player1 = User.query.filter_by(username=players[0]).first()
     player2 = User.query.filter_by(username=players[1]).first()
 
@@ -195,11 +199,16 @@ def handle_game_over(data):
         print("Error: Could not find user records for Elo calculation.")
         return
 
+    # Debug logs to ensure we know what is happening
+    print(f"Game over. Winner: {winner_username}. Players: {players}")
+    print(f"Current Elos before update: {player1.username}: {player1.elo}, {player2.username}: {player2.elo}")
+
     if winner_username == 'Tie':
-        # Tie scenario: apply minimal Elo adjustments
+        # Tie scenario
         calculate_elo_tie(player1, player2, k=16)
+        print(f"Tie Elo Update: {player1.username}: {player1.elo}, {player2.username}: {player2.elo}")
     else:
-        # Winner-loser scenario
+        # Identify winner and loser
         if winner_username == player1.username:
             winner = player1
             loser = player2
@@ -207,10 +216,21 @@ def handle_game_over(data):
             winner = player2
             loser = player1
 
-        calculate_elo(winner, loser, k=32)  # Or whatever k you use for normal updates
+        calculate_elo(winner, loser, k=32)
+        print(f"Winner: {winner.username}, Loser: {loser.username}")
+        print(f"Post-update Elos: {player1.username}: {player1.elo}, {player2.username}: {player2.elo}")
 
+    # Commit changes to the database
     db.session.commit()
-    print(f"Elo updated: {player1.username}: {player1.elo}, {player2.username}: {player2.elo}")
+    print("Elo changes committed to the database.")
+
+    # Optional: emit an event to notify the front-end of updated Elo ratings
+    updated_elos = {
+        player1.username: player1.elo,
+        player2.username: player2.elo
+    }
+    socketio.emit('elo_updated', updated_elos, broadcast=True)
+
 
 
 
