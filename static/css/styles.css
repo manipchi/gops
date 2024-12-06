@@ -4,30 +4,66 @@ body {
     background-color: #f0f0f0;
 }
 
+.large-text {
+    font-size: 2em; /* Adjust as needed */
+    line-height: 1.5; /* Increase line-height for readability */
+}
+
+.full-width {
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Container for main game content */
 #game-container {
     max-width: 600px;
     margin: 0 auto;
 }
 
+/* Headings */
 h1 {
     color: #37A908;
+    font-size: 50px;
 }
 
-#join-game input {
+/* Forms and Inputs */
+#login-container, 
+#register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers content horizontally */
+    justify-content: center; /* If you want vertical centering as well */
+    padding: 20px;
+    min-height: 100vh; /* Ensures the container fills the screen height if you want vertical centering */
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    width: 300px; /* Adjust as needed */
+    margin: 30px auto 0 auto; /* Centers the form horizontally */
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 10px;
+}
+
+.form-group input {
     padding: 10px;
-    margin: 10px 0;
-    font-size: 16px;
-    font-family: 'Roboto Mono', monospace;
-    border: 2px solid #37A908;
-    border-radius: 5px;
-    width: 80%;
-    box-sizing: border-box;
+    font-size: 1em;
 }
 
+/* Buttons */
 button {
     margin: 10px;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 1em;
     font-family: 'Roboto Mono', monospace;
     background-color: #37A908;
     color: white;
@@ -40,34 +76,7 @@ button:hover {
     background-color: #2e7a06;
 }
 
-#hand-cards button.selected {
-    background-color: #37A908;
-    color: white;
-    font-weight: bold;
-}
-
-#hand-cards button {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #f0f0f0;
-    color: black;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#game-over {
-    margin-top: 20px;
-    display: none;
-}
-
-#game-over-message {
-    font-size: 18px;
-    color: #555;
-    margin-bottom: 20px;
-}
-
+/* Card styling */
 .card {
     display: inline-block;
     padding: 10px;
@@ -75,7 +84,7 @@ button:hover {
     border: 1px solid black;
     border-radius: 5px;
     background-color: white; /* Default white for unselected cards */
-    color: black; /* Text color for white cards */
+    color: black;
     font-family: 'Roboto Mono', monospace;
     font-size: 20px;
     text-align: center;
@@ -95,3 +104,34 @@ button:hover {
     font-weight: bold;
 }
 
+/* Table containers and styling */
+.table-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.table-container table {
+    border-collapse: collapse;
+}
+
+.table-container th, .table-container td {
+    padding: 10px 20px;
+    border: 1px solid #333;
+}
+
+.table-container th {
+    background-color: #ccc;
+}
+
+/* Game Over Section */
+#game-over {
+    margin-top: 40px;
+    display: none;
+}
+
+#game-over-message {
+    font-size: 30px;
+    color: #555;
+    margin-bottom: 20px;
+}

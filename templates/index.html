@@ -6,50 +6,55 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-    <div id="game-container">
-        <h1>Goofspiel</h1>
+<body class="large-text">
+    <div id="game-container" class="full-width">
+        <header>
+            <h1>Goofspiel</h1>
+            <!-- Navigation Bar -->
+            <nav>
+                {% if current_user.is_authenticated %}
+                    <p>Welcome, {{ current_user.username }}! Elo: {{ current_user.elo }}</p>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                    <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                    <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
+                {% endif %}
+            </nav>
+        </header>
 
-        <!-- Navigation Bar -->
-        <nav>
-            {% if current_user.is_authenticated %}
-                <p>Welcome, {{ current_user.username }}! Elo: {{ current_user.elo }}</p>
-                <a href="{{ url_for('logout') }}">Logout</a>
-                <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
-            {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
-                <a href="{{ url_for('register') }}">Register</a>
-                <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
-            {% endif %}
-        </nav>
+        <main>
+            <!-- Join Game Section -->
+            <section id="join-section">
+                {% if current_user.is_authenticated %}
+                    <div id="join-game">
+                        <button id="join-btn">Join Game</button>
+                        <p id="waiting-message"></p>
+                    </div>
+                {% else %}
+                    <p>You must be logged in to play. Please <a href="{{ url_for('login') }}">login</a> or <a href="{{ url_for('register') }}">register</a>.</p>
+                {% endif %}
+            </section>
 
-        <!-- Join Game Section -->
-        {% if current_user.is_authenticated %}
-        <div id="join-game">
-            <button id="join-btn">Join Game</button>
-            <p id="waiting-message"></p>
-        </div>
-        {% else %}
-        <p>You must be logged in to play. Please <a href="{{ url_for('login') }}">login</a> or <a href="{{ url_for('register') }}">register</a>.</p>
-        {% endif %}
+            <!-- Game Section -->
+            <section id="play-section" style="display: none;">
+                <p id="prize-card">Prize Card: </p>
+                <p id="accumulated-prizes">Accumulated Prizes: None</p>
+                <p id="your-hand">Your Hand: </p>
+                <div id="hand-cards"></div>
+                <p id="round-info"></p>
+                <p id="scores"></p>
+            </section>
 
-
-        <!-- Game Section -->
-        <div id="game" style="display: none;">
-            <p id="prize-card">Prize Card: </p>
-            <p id="accumulated-prizes">Accumulated Prizes: None</p>
-            <p id="your-hand">Your Hand: </p>
-            <div id="hand-cards"></div>
-            <p id="round-info"></p>
-            <p id="scores"></p>
-        </div>
-
-        <!-- Game Over Section -->
-        <div id="game-over" style="display: none;">
-            <p id="game-over-message"></p>
-            <button id="return-home-btn">Return to Home</button>
-        </div>
+            <!-- Game Over Section -->
+            <section id="game-over-section" style="display: none;">
+                <p id="game-over-message"></p>
+                <button id="return-home-btn">Return to Home</button>
+            </section>
+        </main>
     </div>
+
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
