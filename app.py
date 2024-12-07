@@ -52,8 +52,8 @@ def register():
             return render_template('register.html', error="Email is already registered.")
 
         # Create the new user
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        new_user = User(username=username, email=email, password=hashed_password)
+        new_user = User(username=username, email=email)
+        new_user.set_password(password)  # Use the set_password method to hash the password
         db.session.add(new_user)
         db.session.commit()
 
@@ -62,23 +62,21 @@ def register():
 
     return render_template('register.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
-        # Check if the username exists
+        # Fetch the user by username
         user = User.query.filter_by(username=username).first()
         if not user:
             return render_template('login.html', error="Username does not exist.")
 
-        # Check if the password matches
-        try:
-            if not bcrypt.check_password_hash(user.password, password):
-                return render_template('login.html', error="Incorrect password.")
-        except ValueError:
-            return render_template('login.html', error="Invalid login credentials.")
+        # Check the password using the check_password method
+        if not user.check_password(password):
+            return render_template('login.html', error="Incorrect password.")
 
         # Log in the user
         login_user(user)
@@ -86,7 +84,6 @@ def login():
         return redirect(url_for('index'))
 
     return render_template('login.html')
-
 
 @app.route('/logout')
 @login_required
