@@ -10,16 +10,24 @@
     <div id="game-container" class="full-width">
         <header>
             <h1>Goofspiel</h1>
+            <!-- Join Game Button -->
+            {% if current_user.is_authenticated %}
+                <div id="join-game-container">
+                    <button id="join-btn">Join Game</button>
+                    <p id="waiting-message"></p>
+                </div>
+            {% endif %}
+
             <!-- Navigation Bar -->
-            <nav>
+            <nav id="nav-links">
                 {% if current_user.is_authenticated %}
                     <p>Welcome, {{ current_user.username }}! Elo: {{ current_user.elo }}</p>
-                    <a href="{{ url_for('logout') }}">Logout</a>
-                    <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
+                    <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                    <a href="{{ url_for('leaderboard') }}" class="nav-link">Leaderboard</a>
                 {% else %}
-                    <a href="{{ url_for('login') }}">Login</a>
-                    <a href="{{ url_for('register') }}">Register</a>
-                    <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
+                    <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                    <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+                    <a href="{{ url_for('leaderboard') }}" class="nav-link">Leaderboard</a>
                 {% endif %}
             </nav>
         </header>
