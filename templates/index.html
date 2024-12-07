@@ -10,7 +10,6 @@
     <div id="game-container" class="full-width">
         <header>
             <h1>Goofspiel</h1>
-            <!-- Join Game Button -->
             {% if current_user.is_authenticated %}
                 <div id="join-game-container">
                     <button id="join-btn">Join Game</button>
@@ -18,7 +17,6 @@
                 </div>
             {% endif %}
 
-            <!-- Navigation Bar -->
             <nav id="nav-links">
                 {% if current_user.is_authenticated %}
                     <p>Welcome, {{ current_user.username }}! Elo: {{ current_user.elo }}</p>
@@ -33,7 +31,6 @@
         </header>
 
         <main>
-            <!-- Join Game Section -->
             <section id="join-section">
                 {% if current_user.is_authenticated %}
                     <div id="join-game">
@@ -45,7 +42,6 @@
                 {% endif %}
             </section>
 
-            <!-- Game Section -->
             <section id="play-section" style="display: none;">
                 <p id="prize-card">Prize Card: </p>
                 <p id="accumulated-prizes">Accumulated Prizes: None</p>
@@ -55,7 +51,6 @@
                 <p id="scores"></p>
             </section>
 
-            <!-- Game Over Section -->
             <section id="game-over-section" style="display: none;">
                 <p id="game-over-message"></p>
                 <button id="return-home-btn" data-home-url="{{ url_for('index') }}">Return to Home</button>

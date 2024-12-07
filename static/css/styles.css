@@ -1,73 +1,57 @@
-/* CSS file - styles.css */
-
-/* General Styling */
+/* General Styles */
 body {
     font-family: 'Roboto Mono', monospace;
     text-align: center;
-    background-color: #f0f0f0;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
 }
 
-/* Large text for headers */
-.large-text {
-    font-size: 2em;
-    line-height: 1.5;
-}
-
-/* Full-width containers */
-.full-width {
-    width: 100%;
-    margin: 0 auto;
-}
-
-/* Main Game Container */
+/* Container and General Layout */
 #game-container {
-    max-width: 600px;
-    margin: 0 auto;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 10px;
 }
 
-/* Header Styling */
+/* Header */
 h1 {
     color: #37A908;
-    font-size: 50px;
+    font-size: 2rem;
+    margin-bottom: 20px;
 }
 
 /* Join Game Button */
-#join-game-container {
-    margin-bottom: 10px;
-}
-
 #join-btn {
-    font-size: 1.2em;
-    padding: 10px 30px;
+    font-size: 1rem;
+    padding: 8px 20px;
     background-color: #37A908;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: all 0.3s ease-in-out;
 }
 
 #join-btn:hover {
     background-color: #2e7a06;
 }
 
-/* Navigation Links */
+/* Navigation */
 #nav-links {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
+    justify-content: space-between;
+    margin: 10px 0;
+    font-size: 0.9rem;
 }
 
 .nav-link {
     text-decoration: none;
-    font-size: 1em;
     color: #555;
-    border: 1px solid #ccc;
-    border-radius: 5px;
     padding: 5px 10px;
-    transition: all 0.3s ease-in-out;
+    border-radius: 5px;
     background-color: white;
+    border: 1px solid #ccc;
+    transition: all 0.3s ease-in-out;
 }
 
 .nav-link:hover {
@@ -75,21 +59,28 @@ h1 {
     color: white;
 }
 
-/* Hide Navigation Links During Game */
-body.in-game #nav-links {
-    display: none;
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    #nav-links {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .nav-link {
+        padding: 10px;
+    }
 }
 
 /* Sections */
 section {
-    margin-bottom: 20px;
-    padding: 20px;
     background-color: white;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Card Styling */
+/* Cards */
 .card {
     display: inline-block;
     padding: 10px;
@@ -97,20 +88,33 @@ section {
     border: 1px solid black;
     border-radius: 5px;
     background-color: white;
-    font-size: 20px;
     text-align: center;
     cursor: pointer;
     width: 50px;
     height: 70px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.card:hover {
-    background-color: #f0f0f0;
 }
 
 .card.selected {
     background-color: #37A908;
     color: white;
-    font-weight: bold;
+}
+
+/* Game Over Section */
+#game-over-message {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+#return-home-btn {
+    font-size: 1rem;
+    padding: 10px 20px;
+    color: white;
+    background-color: #37A908;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#return-home-btn:hover {
+    background-color: #2e7a06;
 }
