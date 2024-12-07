@@ -11,37 +11,25 @@
         <header>
             <h1>Goofspiel</h1>
             {% if current_user.is_authenticated %}
+                <p id="welcome-message">Welcome, {{ current_user.username }}! Elo: {{ current_user.elo }}</p>
                 <div id="join-game-container">
                     <button id="join-btn">Join Game</button>
-                    <p id="waiting-message"></p>
                 </div>
-            {% endif %}
-
-            <nav id="nav-links">
-                {% if current_user.is_authenticated %}
-                    <p>Welcome, {{ current_user.username }}! Elo: {{ current_user.elo }}</p>
+                <nav id="nav-links">
                     <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
                     <a href="{{ url_for('leaderboard') }}" class="nav-link">Leaderboard</a>
-                {% else %}
+                </nav>
+            {% else %}
+                <nav id="nav-links">
                     <a href="{{ url_for('login') }}" class="nav-link">Login</a>
                     <a href="{{ url_for('register') }}" class="nav-link">Register</a>
                     <a href="{{ url_for('leaderboard') }}" class="nav-link">Leaderboard</a>
-                {% endif %}
-            </nav>
+                </nav>
+            {% endif %}
         </header>
 
         <main>
-            <section id="join-section">
-                {% if current_user.is_authenticated %}
-                    <div id="join-game">
-                        <button id="join-btn">Join Game</button>
-                        <p id="waiting-message"></p>
-                    </div>
-                {% else %}
-                    <p>You must be logged in to play. Please <a href="{{ url_for('login') }}">login</a> or <a href="{{ url_for('register') }}">register</a>.</p>
-                {% endif %}
-            </section>
-
+            <!-- Join Game Section -->
             <section id="play-section" style="display: none;">
                 <p id="prize-card">Prize Card: </p>
                 <p id="accumulated-prizes">Accumulated Prizes: None</p>
@@ -51,6 +39,7 @@
                 <p id="scores"></p>
             </section>
 
+            <!-- Game Over Section -->
             <section id="game-over-section" style="display: none;">
                 <p id="game-over-message"></p>
                 <button id="return-home-btn" data-home-url="{{ url_for('index') }}">Return to Home</button>

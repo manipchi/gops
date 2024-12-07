@@ -44,28 +44,45 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        user = User(username=username, email=email)
-        user.set_password(password)
-        db.session.add(user)
-        db.session.commit()
-        flash('Registration successful!', 'success')
-        return redirect(url_for('login'))
-    return render_template('register.html')
 
+        # Check if username or email is already taken
+        if User.query.filter_by(username=username).first():
+            return render_template('register.html', error="Username is already taken.")
+        if User.query.filter_by(email=email).first():
+            return render_template('register.html', error="Email is already registered.")
+
+        # Create the new user
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        new_user = User(username=username, email=email, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('Registration successful! You can now log in.', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        if user and user.check_password(password):
-            login_user(user)
-            flash('Login successful!', 'success')
-            return redirect(url_for('index'))
-        flash('Invalid username or password.', 'danger')
-    return render_template('login.html')
 
+        # Check if the username exists
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return render_template('login.html', error="Username does not exist.")
+
+        # Check if the password matches
+        if not bcrypt.check_password_hash(user.password, password):
+            return render_template('login.html', error="Incorrect password.")
+
+        # Log in the user
+        login_user(user)
+        flash('Login successful!', 'success')
+        return redirect(url_for('index'))
+
+    return render_template('login.html')
 
 @app.route('/logout')
 @login_required

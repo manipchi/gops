@@ -7,7 +7,7 @@ body {
     padding: 0;
 }
 
-/* Container and General Layout */
+/* Game Container */
 #game-container {
     max-width: 500px;
     margin: 20px auto;
@@ -18,10 +18,20 @@ body {
 h1 {
     color: #37A908;
     font-size: 2rem;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+}
+
+/* Welcome Message */
+#welcome-message {
+    font-size: 1rem;
+    margin-bottom: 15px;
 }
 
 /* Join Game Button */
+#join-game-container {
+    margin-bottom: 15px;
+}
+
 #join-btn {
     font-size: 1rem;
     padding: 8px 20px;
@@ -36,16 +46,16 @@ h1 {
     background-color: #2e7a06;
 }
 
-/* Navigation */
+/* Navigation Links */
 #nav-links {
     display: flex;
-    justify-content: space-between;
-    margin: 10px 0;
-    font-size: 0.9rem;
+    justify-content: center;
+    gap: 10px;
 }
 
 .nav-link {
     text-decoration: none;
+    font-size: 0.9rem;
     color: #555;
     padding: 5px 10px;
     border-radius: 5px;
@@ -59,62 +69,158 @@ h1 {
     color: white;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 600px) {
-    #nav-links {
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .nav-link {
-        padding: 10px;
-    }
+/* Play Section */
+#play-section, #game-over-section {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Sections */
-section {
+/* Leaderboard Styling */
+#leaderboard-container {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.table-container {
+    margin: 20px auto;
+    width: 90%;
+    max-width: 600px; /* Ensure it doesn't stretch too wide */
+    overflow-x: auto; /* Enable horizontal scrolling on smaller screens */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    text-align: center; /* Center align text inside table cells */
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #37A908;
+    color: white;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #e0e0e0; /* Subtle highlight on hover */
+}
+
+/* Back to Home Link Styling */
+.back-to-home {
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+.back-link {
+    color: #555;
+    text-decoration: none;
+    font-size: 1rem;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease-in-out;
+}
+
+.back-link:hover {
+    color: #37A908;
+    border-bottom: 1px solid #37A908;
+}
+
+/* Form Container */
+.form-container {
+    width: 90%;
+    max-width: 400px;
+    margin: 20px auto;
     background-color: white;
-    margin: 10px 0;
-    padding: 15px;
-    border-radius: 8px;
+    padding: 20px;
+    border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Cards */
-.card {
-    display: inline-block;
-    padding: 10px;
-    margin: 5px;
-    border: 1px solid black;
-    border-radius: 5px;
-    background-color: white;
-    text-align: center;
-    cursor: pointer;
-    width: 50px;
-    height: 70px;
-}
-
-.card.selected {
-    background-color: #37A908;
-    color: white;
-}
-
-/* Game Over Section */
-#game-over-message {
-    font-size: 1.2rem;
+/* Styled Form */
+.styled-form .form-group {
     margin-bottom: 20px;
+    text-align: left;
 }
 
-#return-home-btn {
+.styled-form label {
+    display: block;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.styled-form input {
+    width: 100%;
+    padding: 10px;
     font-size: 1rem;
-    padding: 10px 20px;
-    color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.styled-form input:focus {
+    border-color: #37A908;
+    outline: none;
+}
+
+/* Form Buttons */
+.form-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
     background-color: #37A908;
+    color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
 }
 
-#return-home-btn:hover {
+.form-button:hover {
     background-color: #2e7a06;
+}
+
+.form-button:active {
+    transform: scale(0.98);
+}
+
+/* Footer Links */
+.form-footer {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.form-footer a {
+    color: #37A908;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.form-footer a:hover {
+    color: #2e7a06;
+}
+
+/* Error Message Styling */
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0.9rem;
 }
