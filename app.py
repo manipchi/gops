@@ -74,8 +74,11 @@ def login():
             return render_template('login.html', error="Username does not exist.")
 
         # Check if the password matches
-        if not bcrypt.check_password_hash(user.password, password):
-            return render_template('login.html', error="Incorrect password.")
+        try:
+            if not bcrypt.check_password_hash(user.password, password):
+                return render_template('login.html', error="Incorrect password.")
+        except ValueError:
+            return render_template('login.html', error="Invalid login credentials.")
 
         # Log in the user
         login_user(user)
@@ -83,6 +86,7 @@ def login():
         return redirect(url_for('index'))
 
     return render_template('login.html')
+
 
 @app.route('/logout')
 @login_required
