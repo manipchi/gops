@@ -3,26 +3,32 @@ const socket = io();
 document.addEventListener("DOMContentLoaded", () => {
     let selectedCard = null; // Track the currently selected card
 
-    // Helper function to toggle navigation links
-    function toggleNavLinks(visible) {
-        const navLinks = document.getElementById("nav-links");
-        if (navLinks) {
-            navLinks.style.display = visible ? "flex" : "none";
-        }
+    // Helper function to reset the game UI
+    function resetGameUI() {
+        // Clear all game-related messages and UI elements
+        document.getElementById("prize-card").innerText = "Prize Card: ";
+        document.getElementById("accumulated-prizes").innerText = "Accumulated Prizes: None";
+        document.getElementById("round-info").innerText = "";
+        document.getElementById("scores").innerText = "";
+        const handCardsDiv = document.getElementById("hand-cards");
+        handCardsDiv.innerHTML = ""; // Clear hand cards
+        selectedCard = null; // Reset selected card
     }
 
-    // Toggle UI based on game state
-    function toggleGameUI(isGameActive) {
-        const body = document.body;
-        if (isGameActive) {
-            body.classList.add("in-game");
-        } else {
-            body.classList.remove("in-game");
-        }
-    }
+    // Handle "Return to Home" Button
+    document.getElementById("return-home-btn").addEventListener("click", () => {
+        // Reset the UI to the original home page
+        resetGameUI();
+        document.getElementById("join-section").style.display = "block"; // Show the Join Game section
+        document.getElementById("play-section").style.display = "none"; // Hide the play section
+        document.getElementById("game-over-section").style.display = "none"; // Hide the game over section
+        const waitingMessage = document.getElementById("waiting-message");
+        if (waitingMessage) waitingMessage.innerText = ""; // Clear waiting message
+    });
 
     // Handle Join Game Button
     document.getElementById("join-btn").addEventListener("click", () => {
+        // Emit join event
         socket.emit("join");
     });
 
@@ -37,9 +43,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Handle Game Start
     socket.on("game_start", (data) => {
         console.log("Game started with players:", data.players);
-        toggleGameUI(true); // Hide unnecessary elements
-        const playSection = document.getElementById("play-section");
-        playSection.style.display = "block"; // Show the game area
+        resetGameUI(); // Clear previous game data
+        document.getElementById("join-section").style.display = "none"; // Hide the Join Game section
+        document.getElementById("play-section").style.display = "block"; // Show the play section
     });
 
     // Handle Card Update
@@ -107,10 +113,8 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.on("game_over", (data) => {
         console.log("Game over. Winner:", data.winner);
 
-        // Hide the play section and unnecessary buttons
+        // Hide the play section
         document.getElementById("play-section").style.display = "none";
-        document.getElementById("join-game-container").style.display = "none";
-        document.getElementById("nav-links").style.display = "none";
 
         // Show only the Game Over section with the return button
         const gameOverSection = document.getElementById("game-over-section");
@@ -123,36 +127,12 @@ document.addEventListener("DOMContentLoaded", () => {
             .join(", ")}`;
     });
 
-
     // Handle Player Disconnect
     socket.on("player_disconnected", (data) => {
         console.log(data.message);
         const gameOverMessage = document.getElementById("game-over-message");
         gameOverMessage.innerText = data.message;
-        toggleGameUI(false); // Reset UI to pre-game state
+        document.getElementById("play-section").style.display = "none";
         document.getElementById("game-over-section").style.display = "block";
     });
-
-    // Return to Home Button
-    document.getElementById("return-home-btn").addEventListener("click", () => {
-        toggleGameUI(false);
-        document.getElementById("join-section").style.display = "block";
-        document.getElementById("play-section").style.display = "none";
-        document.getElementById("game-over-section").style.display = "none";
-        document.getElementById("waiting-message").innerText = "";
-    });
-
-    // Error handling
-    socket.on("error", (data) => {
-        alert(data.message); // Display the error message in an alert
-    });
-
-    // Card value conversion helper
-    function card_to_value(card) {
-        if (card === "A") return 1;
-        if (card === "J") return 11;
-        if (card === "Q") return 12;
-        if (card === "K") return 13;
-        return parseInt(card);
-    }
 });
