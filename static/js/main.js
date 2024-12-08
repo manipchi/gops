@@ -134,4 +134,12 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Error received from server:", data.message);
         alert(data.message);
     });
+
+    socket.on("connect", () => {
+        console.log("Socket connected with ID:", socket.id); // Debugging log
+    });
+    socket.on("disconnect", () => {
+        console.log("Socket disconnected."); // Debugging log
+    });
+    
 });
