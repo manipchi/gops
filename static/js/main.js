@@ -3,6 +3,7 @@ const socket = io();
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM fully loaded and parsed."); // Debugging log
     let selectedCard = null;
+    let isSearching = false; // Track whether the user is currently searching for a game
 
     // Reset the game UI
     function resetGameUI() {
@@ -29,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (gameOverSection) gameOverSection.style.display = showGameOver ? "block" : "none";
         if (navLinks) navLinks.style.display = showPlay ? "none" : "flex"; // Hide navigation during game
         if (welcomeMessage) welcomeMessage.style.display = showPlay ? "none" : "block"; // Hide welcome message during game
-        if (joinBtn) joinBtn.style.display = showPlay ? "none" : "block"; // Hide Join Game button during gameplay
+        if (joinBtn) joinBtn.style.display = showPlay || !showJoin ? "none" : "block"; // Hide Join Game button during gameplay or waiting
     }
 
     // Show "Searching for Opponent" message
@@ -55,10 +56,22 @@ document.addEventListener("DOMContentLoaded", () => {
     if (joinBtn) {
         console.log("Join Game button found. Adding event listener.");
         joinBtn.addEventListener("click", () => {
-            console.log("Join Game button clicked, emitting 'join' event.");
-            showSearchingMessage(); // Show "Searching for Opponent" message
-            toggleSections({ showJoin: false, showPlay: false, showGameOver: false });
-            socket.emit("join");
+            if (!isSearching) {
+                // Start searching for a game
+                console.log("Join Game button clicked. Starting search...");
+                socket.emit("join");
+                joinBtn.textContent = "Cancel Search"; // Change button text
+                showSearchingMessage(); // Show "Searching for Opponent" message
+                toggleSections({ showJoin: false, showPlay: false, showGameOver: false });
+                isSearching = true; // Update state
+            } else {
+                // Cancel the search
+                console.log("Cancel Search button clicked.");
+                socket.emit("cancel"); // Emit cancel event to the server
+                joinBtn.textContent = "Join Game"; // Revert button text
+                clearSearchingMessage(); // Clear the searching message
+                isSearching = false; // Update state
+            }
         });
     } else {
         console.error("Join Game button not found in DOM.");
@@ -79,6 +92,8 @@ document.addEventListener("DOMContentLoaded", () => {
         resetGameUI();
         clearSearchingMessage(); // Clear "Searching for Opponent" message
         toggleSections({ showJoin: false, showPlay: true, showGameOver: false }); // Show the game UI
+        isSearching = false; // Reset search state
+        joinBtn.textContent = "Join Game"; // Reset button text
     });
 
     // Handle "update_hand" event
@@ -117,20 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Received 'update_prize' event:", data);
         document.getElementById("prize-card").innerText = `Prize Card: ${data.prize_card}`;
         document.getElementById("accumulated-prizes").innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(", ")}`;
-    });
-
-    // Handle "round_result" event
-    socket.on("round_result", (data) => {
-        console.log("Round result received:", data);
-        const roundInfo = document.getElementById("round-info");
-        roundInfo.textContent = `${data.message} Opponent played ${data.opponent_card}.`;
-
-        const scoresElement = document.getElementById("scores");
-        let scoresText = "Scores: ";
-        for (const [player, score] of Object.entries(data.scores)) {
-            scoresText += `${player}: ${score} `;
-        }
-        scoresElement.textContent = scoresText.trim();
     });
 
     // Handle "game_over" event
