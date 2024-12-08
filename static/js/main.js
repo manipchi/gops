@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Handle "Join Game" button click
     document.getElementById("join-btn").addEventListener("click", () => {
         console.log("Join Game button clicked.");
-        showSearchingMessage();
+        showSearchingMessage(); // Show "Searching for Opponent" message
         toggleSections({ showJoin: false, showPlay: false, showGameOver: false });
         socket.emit("join");
     });
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.on("game_start", (data) => {
         console.log("Game started with players:", data.players);
         resetGameUI(); // Clear previous game data
-        clearSearchingMessage(); // Clear the searching message
+        clearSearchingMessage(); // Clear the "Searching for Opponent" message
         toggleSections({ showJoin: false, showPlay: true, showGameOver: false });
     });
 
