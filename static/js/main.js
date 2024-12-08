@@ -20,10 +20,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const joinSection = document.getElementById("join-section");
         const playSection = document.getElementById("play-section");
         const gameOverSection = document.getElementById("game-over-section");
+        const navLinks = document.getElementById("nav-links");
+        const welcomeMessage = document.getElementById("welcome-message");
 
         if (joinSection) joinSection.style.display = showJoin ? "block" : "none";
         if (playSection) playSection.style.display = showPlay ? "block" : "none";
         if (gameOverSection) gameOverSection.style.display = showGameOver ? "block" : "none";
+        if (navLinks) navLinks.style.display = showPlay ? "none" : "flex"; // Hide navigation during game
+        if (welcomeMessage) welcomeMessage.style.display = showPlay ? "none" : "block"; // Hide welcome message during game
     }
 
     // Show "Searching for Opponent" message
@@ -50,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Join Game button found. Adding event listener.");
         joinBtn.addEventListener("click", () => {
             console.log("Join Game button clicked, emitting 'join' event.");
-            showSearchingMessage();
+            showSearchingMessage(); // Show "Searching for Opponent" message
             toggleSections({ showJoin: false, showPlay: false, showGameOver: false });
             socket.emit("join");
         });
@@ -71,8 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.on("game_start", (data) => {
         console.log("Game started with players:", data.players);
         resetGameUI();
-        clearSearchingMessage();
-        toggleSections({ showJoin: false, showPlay: true, showGameOver: false });
+        clearSearchingMessage(); // Clear "Searching for Opponent" message
+        toggleSections({ showJoin: false, showPlay: true, showGameOver: false }); // Show the game UI
     });
 
     // Handle "update_hand" event
