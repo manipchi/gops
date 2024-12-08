@@ -22,12 +22,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const gameOverSection = document.getElementById("game-over-section");
         const navLinks = document.getElementById("nav-links");
         const welcomeMessage = document.getElementById("welcome-message");
+        const joinBtn = document.getElementById("join-btn");
 
         if (joinSection) joinSection.style.display = showJoin ? "block" : "none";
         if (playSection) playSection.style.display = showPlay ? "block" : "none";
         if (gameOverSection) gameOverSection.style.display = showGameOver ? "block" : "none";
         if (navLinks) navLinks.style.display = showPlay ? "none" : "flex"; // Hide navigation during game
         if (welcomeMessage) welcomeMessage.style.display = showPlay ? "none" : "block"; // Hide welcome message during game
+        if (joinBtn) joinBtn.style.display = showPlay ? "none" : "block"; // Hide Join Game button during gameplay
     }
 
     // Show "Searching for Opponent" message
@@ -153,8 +155,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // Ensure navigation and welcome are still hidden
         const navLinks = document.getElementById("nav-links");
         const welcomeMessage = document.getElementById("welcome-message");
+        const joinBtn = document.getElementById("join-btn");
         if (navLinks) navLinks.style.display = "none";
         if (welcomeMessage) welcomeMessage.style.display = "none";
+        if (joinBtn) joinBtn.style.display = "none";
     });
 
     // Handle "Return to Home" button click
