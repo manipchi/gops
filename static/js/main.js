@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedCard = null;
     }
 
-    // Toggle visibility of game sections
+    // Toggle visibility of sections and navigation
     function toggleSections({ showJoin = false, showPlay = false, showGameOver = false }) {
         const joinSection = document.getElementById("join-section");
         const playSection = document.getElementById("play-section");
@@ -149,6 +149,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const gameOverMessage = document.getElementById("game-over-message");
         gameOverMessage.innerText = data.message;
+
+        // Ensure navigation and welcome are still hidden
+        const navLinks = document.getElementById("nav-links");
+        const welcomeMessage = document.getElementById("welcome-message");
+        if (navLinks) navLinks.style.display = "none";
+        if (welcomeMessage) welcomeMessage.style.display = "none";
     });
 
     // Handle "Return to Home" button click
