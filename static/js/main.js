@@ -119,6 +119,23 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("accumulated-prizes").innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(", ")}`;
     });
 
+    // Handle "round_result" event
+    socket.on("round_result", (data) => {
+        console.log("Round result received:", data);
+
+        // Display round info
+        const roundInfo = document.getElementById("round-info");
+        roundInfo.textContent = `${data.message} Opponent played ${data.opponent_card}.`;
+
+        // Update scores
+        const scoresElement = document.getElementById("scores");
+        let scoresText = "Scores: ";
+        for (const [player, score] of Object.entries(data.scores)) {
+            scoresText += `${player}: ${score} `;
+        }
+        scoresElement.textContent = scoresText.trim();
+    });
+
     // Handle "game_over" event
     socket.on("game_over", (data) => {
         console.log("Game over. Winner:", data.winner);
