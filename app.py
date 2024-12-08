@@ -102,47 +102,56 @@ def on_join():
     global waiting_player
     username = current_user.username
     sid = request.sid  # Get the session ID of the player
-    print(f"Join event received for user: {current_user.username}")
+
+    print(f"Join event received from user: {username}, session ID: {sid}")  # Debugging log
+
+    # Check if the player is trying to join a game against themselves
     if waiting_player and waiting_player['sid'] == sid:
         emit('error', {'message': 'You cannot join a game against yourself.'}, to=sid)
         return
 
     if waiting_player is None:
-        # Set this player as the waiting player
+        # If no waiting player, make the current player wait
         waiting_player = {'username': username, 'sid': sid}
         emit('waiting', {'message': 'Waiting for another player to join...'}, to=sid)
+        print(f"{username} is now waiting for an opponent.")  # Debugging log
     else:
-        # Match this player with the waiting player
+        # Match the current player with the waiting player
         player1 = waiting_player['username']
         player1_sid = waiting_player['sid']
         player2 = username
         player2_sid = sid
         waiting_player = None  # Reset the waiting player
 
-        # Create a game room
+        # Create a unique room for this game
         room = f'room_{player1}_{player2}'
 
-        # Make both players join the room
+        # Add both players to the room
         socketio.server.enter_room(player1_sid, room)
         socketio.server.enter_room(player2_sid, room)
 
-        # Notify both players that the game is starting
+        print(f"Game initialized for room {room}")  # Debugging log
+        print(f"Players: {player1}, {player2}")
+
+        # Notify both players that the game has started
         socketio.emit('game_start', {'players': [player1, player2]}, room=room)
 
         # Initialize the game
         game = Game(room, [player1, player2], [player1_sid, player2_sid])
         games[room] = game
 
-        # Emit the initial hand for each player
+        # Emit the initial hands and prize card to both players
         for player in game.players:
             hand = game.get_player_hand(player)
             player_sid = game.player_sids[player]
+            print(f"Hand for {player}: {hand}")  # Debugging log
             socketio.emit('update_hand', {'hand': hand}, to=player_sid)
 
-        # Emit the first prize card
         prize_card = game.next_prize_card()
         accumulated_prizes = game.get_accumulated_prizes_display()
+        print(f"Next prize card: {prize_card}, Accumulated prizes: {accumulated_prizes}")  # Debugging log
         socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
+
 
 
 @socketio.on('select_card')
