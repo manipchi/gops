@@ -1,43 +1,32 @@
 const socket = io();
 
 document.addEventListener("DOMContentLoaded", () => {
-    let selectedCard = null; // Track the currently selected card
+    let selectedCard = null;
 
-    // Helper function to reset the game UI
+    // Reset the game UI
     function resetGameUI() {
-        console.log("Resetting game UI..."); // Debugging
+        console.log("Resetting game UI...");
         document.getElementById("prize-card").innerText = "Prize Card: ";
         document.getElementById("accumulated-prizes").innerText = "Accumulated Prizes: None";
         document.getElementById("round-info").innerText = "";
         document.getElementById("scores").innerText = "";
         document.getElementById("hand-cards").innerHTML = ""; // Clear hand cards
-        selectedCard = null; // Reset selected card
+        selectedCard = null;
     }
 
-    // Toggle UI based on game state
-    function toggleGameUI(isGameActive) {
-        console.log(`Toggling game UI: ${isGameActive}`); // Debugging
-        const joinSection = document.getElementById("join-section");
-        const playSection = document.getElementById("play-section");
-        const gameOverSection = document.getElementById("game-over-section");
-
-        if (isGameActive) {
-            joinSection.style.display = "none";
-            playSection.style.display = "block";
-            gameOverSection.style.display = "none";
-        } else {
-            joinSection.style.display = "block";
-            playSection.style.display = "none";
-            gameOverSection.style.display = "none";
-        }
+    // Toggle visibility of game sections
+    function toggleSections({ showJoin = false, showPlay = false, showGameOver = false }) {
+        document.getElementById("join-section").style.display = showJoin ? "block" : "none";
+        document.getElementById("play-section").style.display = showPlay ? "block" : "none";
+        document.getElementById("game-over-section").style.display = showGameOver ? "block" : "none";
     }
 
-    // Display "Searching for Opponent" message
+    // Show "Searching for Opponent" message
     function showSearchingMessage() {
         const waitingMessage = document.getElementById("waiting-message");
         if (waitingMessage) {
             waitingMessage.innerText = "Searching for an opponent...";
-            waitingMessage.style.display = "block"; // Ensure it's visible
+            waitingMessage.style.display = "block";
         }
     }
 
@@ -46,42 +35,43 @@ document.addEventListener("DOMContentLoaded", () => {
         const waitingMessage = document.getElementById("waiting-message");
         if (waitingMessage) {
             waitingMessage.innerText = "";
-            waitingMessage.style.display = "none"; // Hide it
+            waitingMessage.style.display = "none";
         }
     }
 
-    // Handle Join Game Button
+    // Handle "Join Game" button click
     document.getElementById("join-btn").addEventListener("click", () => {
-        console.log("Join Game button clicked"); // Debugging
-        showSearchingMessage(); // Show "Searching for Game" message
-        socket.emit("join"); // Emit join event
+        console.log("Join Game button clicked.");
+        showSearchingMessage();
+        toggleSections({ showJoin: false, showPlay: false, showGameOver: false });
+        socket.emit("join");
     });
 
-    // Handle "Waiting for Opponent" Message
+    // Handle "waiting" event from the server
     socket.on("waiting", (data) => {
-        console.log("Waiting for opponent:", data); // Debugging
+        console.log("Received 'waiting' event from server:", data.message);
         const waitingMessage = document.getElementById("waiting-message");
         if (waitingMessage) {
             waitingMessage.innerText = data.message;
         }
     });
 
-    // Handle Game Start
+    // Handle "game_start" event
     socket.on("game_start", (data) => {
-        console.log("Game started with players:", data.players); // Debugging
+        console.log("Game started with players:", data.players);
         resetGameUI(); // Clear previous game data
-        toggleGameUI(true); // Switch to game UI
-        clearSearchingMessage(); // Clear the "Searching for Opponent" message
+        clearSearchingMessage(); // Clear the searching message
+        toggleSections({ showJoin: false, showPlay: true, showGameOver: false });
     });
 
-    // Handle Card Update
+    // Handle "update_hand" event
     socket.on("update_hand", (data) => {
-        console.log("Updating hand:", data.hand); // Debugging
+        console.log("Received 'update_hand' event:", data.hand);
         const handCardsDiv = document.getElementById("hand-cards");
         handCardsDiv.innerHTML = ""; // Clear previous cards
 
         if (!data.hand || data.hand.length === 0) {
-            console.error("No cards received.");
+            console.error("No cards received from server.");
             return;
         }
 
@@ -105,59 +95,43 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Handle Prize Card Update
+    // Handle "update_prize" event
     socket.on("update_prize", (data) => {
-        console.log("Updating prize card:", data); // Debugging
-        const prizeCardElement = document.getElementById("prize-card");
-        const accumulatedPrizesElement = document.getElementById("accumulated-prizes");
-
-        if (prizeCardElement) {
-            prizeCardElement.innerText = `Prize Card: ${data.prize_card}`;
-        }
-
-        if (accumulatedPrizesElement) {
-            accumulatedPrizesElement.innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(", ")}`;
-        }
+        console.log("Received 'update_prize' event:", data);
+        document.getElementById("prize-card").innerText = `Prize Card: ${data.prize_card}`;
+        document.getElementById("accumulated-prizes").innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(", ")}`;
     });
 
-    // Handle Game Over
+    // Handle "game_over" event
     socket.on("game_over", (data) => {
-        console.log("Game over. Winner:", data.winner); // Debugging
+        console.log("Game over. Winner:", data.winner);
+        toggleSections({ showJoin: false, showPlay: false, showGameOver: true });
 
-        // Hide the play section
-        toggleGameUI(false); // Switch to game-over state
-
-        // Show only the Game Over section
-        const gameOverSection = document.getElementById("game-over-section");
-        gameOverSection.style.display = "block";
-
-        // Update the game over message
         const gameOverMessage = document.getElementById("game-over-message");
         gameOverMessage.innerText = `Game Over! Winner: ${data.winner}\nFinal Scores: ${Object.entries(data.final_scores)
             .map(([player, score]) => `${player}: ${score}`)
             .join(", ")}`;
     });
 
-    // Handle Player Disconnect
+    // Handle player disconnection
     socket.on("player_disconnected", (data) => {
-        console.log("Player disconnected:", data.message); // Debugging
+        console.log("Player disconnected:", data.message);
+        toggleSections({ showJoin: false, showPlay: false, showGameOver: true });
+
         const gameOverMessage = document.getElementById("game-over-message");
         gameOverMessage.innerText = data.message;
-        toggleGameUI(false); // Reset UI to pre-game state
-        document.getElementById("game-over-section").style.display = "block";
     });
 
-    // Return to Home Button
+    // Handle "Return to Home" button click
     document.getElementById("return-home-btn").addEventListener("click", () => {
-        console.log("Returning to home..."); // Debugging
-        resetGameUI(); // Clear game data
-        toggleGameUI(false); // Switch to pre-game UI
-        clearSearchingMessage(); // Clear the searching message
+        console.log("Returning to home...");
+        resetGameUI();
+        toggleSections({ showJoin: true, showPlay: false, showGameOver: false });
     });
 
-    // Error handling
+    // Handle error messages
     socket.on("error", (data) => {
-        console.error("Error received:", data.message); // Debugging
-        alert(data.message); // Display the error message in an alert
+        console.error("Error received from server:", data.message);
+        alert(data.message);
     });
 });
