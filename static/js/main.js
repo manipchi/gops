@@ -1,6 +1,7 @@
 const socket = io();
 
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM fully loaded and parsed."); // Debugging log
     let selectedCard = null;
 
     // Reset the game UI
@@ -39,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Ensure the "Join Game" button exists
     const joinBtn = document.getElementById("join-btn");
     if (joinBtn) {
         console.log("Join Game button found. Adding event listener.");
