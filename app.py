@@ -108,41 +108,41 @@ def on_join():
         return
 
     if waiting_player is None:
+        # Set this player as the waiting player
         waiting_player = {'username': username, 'sid': sid}
         emit('waiting', {'message': 'Waiting for another player to join...'}, to=sid)
     else:
+        # Match this player with the waiting player
         player1 = waiting_player['username']
         player1_sid = waiting_player['sid']
         player2 = username
         player2_sid = sid
-        waiting_player = None  # Reset waiting player
+        waiting_player = None  # Reset the waiting player
 
+        # Create a game room
         room = f'room_{player1}_{player2}'
 
         # Make both players join the room
         socketio.server.enter_room(player1_sid, room)
         socketio.server.enter_room(player2_sid, room)
 
-        # Notify both players
+        # Notify both players that the game is starting
         socketio.emit('game_start', {'players': [player1, player2]}, room=room)
 
         # Initialize the game
         game = Game(room, [player1, player2], [player1_sid, player2_sid])
         games[room] = game
 
-       # Emit updated hands for each player
+        # Emit the initial hand for each player
         for player in game.players:
             hand = game.get_player_hand(player)
             player_sid = game.player_sids[player]
             socketio.emit('update_hand', {'hand': hand}, to=player_sid)
 
-        # Emit the next prize card
+        # Emit the first prize card
         prize_card = game.next_prize_card()
         accumulated_prizes = game.get_accumulated_prizes_display()
         socketio.emit('update_prize', {'prize_card': prize_card, 'accumulated_prizes': accumulated_prizes}, room=room)
-
-
-
 
 
 @socketio.on('select_card')

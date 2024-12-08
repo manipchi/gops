@@ -14,46 +14,44 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Update hand of cards
-    socket.on("update_hand", (data) => {
-        console.log("Received update_hand event:", data); // Debug log
-        const handCardsDiv = document.getElementById("hand-cards");
-        handCardsDiv.innerHTML = ""; // Clear existing cards
-
+    socket.on('update_hand', (data) => {
+        const handCardsDiv = document.getElementById('hand-cards');
+        handCardsDiv.innerHTML = ''; // Clear existing cards
+    
         if (!data.hand || data.hand.length === 0) {
-            console.error("Received an empty hand:", data); // Debug
+            console.error('No cards received.');
             return;
         }
-
-        let selectedCard = null; // Track the currently selected card
-
+    
         data.hand.forEach((card) => {
-            const cardElement = document.createElement("div");
-            cardElement.classList.add("card");
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('card');
             cardElement.textContent = card;
-
-            // Add click event for card selection
-            cardElement.addEventListener("click", () => {
-                if (selectedCard) {
-                    selectedCard.classList.remove("selected"); // Remove highlight from previously selected card
-                }
-                selectedCard = cardElement;
-                cardElement.classList.add("selected"); // Highlight the current selection
-                socket.emit("select_card", { card }); // Notify server of selected card
-                console.log(`Selected card: ${card}`);
+    
+            // Add click event to select a card
+            cardElement.addEventListener('click', () => {
+                socket.emit('select_card', { card });
             });
-
+    
             handCardsDiv.appendChild(cardElement);
         });
-
-        console.log("Updated hand displayed:", data.hand); // Debug log
     });
+    
 
     // Update prize card and accumulated prizes
-    socket.on("update_prize", (data) => {
-        console.log("Received update_prize event:", data); // Debug log
-        document.getElementById("prize-card").innerText = `Prize Card: ${data.prize_card}`;
-        document.getElementById("accumulated-prizes").innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(", ")}`;
+    socket.on('update_prize', (data) => {
+        const prizeCardElement = document.getElementById('prize-card');
+        const accumulatedPrizesElement = document.getElementById('accumulated-prizes');
+    
+        if (prizeCardElement) {
+            prizeCardElement.innerText = `Prize Card: ${data.prize_card}`;
+        }
+    
+        if (accumulatedPrizesElement) {
+            accumulatedPrizesElement.innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(', ')}`;
+        }
     });
+    
 
     // Join Game button click event
     document.getElementById("join-btn").addEventListener("click", () => {
@@ -61,18 +59,31 @@ document.addEventListener("DOMContentLoaded", () => {
         socket.emit("join"); // Emit the event without sending a username
     });
 
-    // Handle waiting message
-    socket.on("waiting", (data) => {
-        document.getElementById("waiting-message").innerText = data.message;
+    socket.on('waiting', (data) => {
+        // Show the waiting message
+        const waitingMessage = document.getElementById('waiting-message');
+        if (waitingMessage) {
+            waitingMessage.innerText = data.message;
+        }
     });
 
     // Start game
-    socket.on("game_start", (data) => {
-        console.log("Game started:", data); // Debug log
-        document.getElementById("join-section").style.display = "none";
-        document.getElementById("play-section").style.display = "block";
-        toggleNavLinks(false); // Hide navigation links during gameplay
+    socket.on('game_start', (data) => {
+        console.log('Game started with players:', data.players);
+    
+        // Hide the join game section
+        const joinSection = document.getElementById('join-section');
+        if (joinSection) {
+            joinSection.style.display = 'none';
+        }
+    
+        // Show the play section
+        const playSection = document.getElementById('play-section');
+        if (playSection) {
+            playSection.style.display = 'block';
+        }
     });
+    
 
     // Round result
     socket.on("round_result", (data) => {
