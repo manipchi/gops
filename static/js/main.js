@@ -39,13 +39,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Handle "Join Game" button click
-    document.getElementById("join-btn").addEventListener("click", () => {
-        console.log("Join Game button clicked.");
-        showSearchingMessage(); // Show "Searching for Opponent" message
-        toggleSections({ showJoin: false, showPlay: false, showGameOver: false });
-        socket.emit("join");
-    });
+    // Ensure the "Join Game" button exists
+    const joinBtn = document.getElementById("join-btn");
+    if (joinBtn) {
+        console.log("Join Game button found. Adding event listener.");
+        joinBtn.addEventListener("click", () => {
+            console.log("Join Game button clicked, emitting 'join' event.");
+            showSearchingMessage(); // Show "Searching for Opponent" message
+            toggleSections({ showJoin: false, showPlay: false, showGameOver: false });
+            socket.emit("join");
+        });
+    } else {
+        console.error("Join Game button not found in DOM.");
+    }
 
     // Handle "waiting" event from the server
     socket.on("waiting", (data) => {
