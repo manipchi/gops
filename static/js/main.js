@@ -5,33 +5,61 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Helper function to reset the game UI
     function resetGameUI() {
-        // Clear all game-related messages and UI elements
+        console.log("Resetting game UI..."); // Debugging
         document.getElementById("prize-card").innerText = "Prize Card: ";
         document.getElementById("accumulated-prizes").innerText = "Accumulated Prizes: None";
         document.getElementById("round-info").innerText = "";
         document.getElementById("scores").innerText = "";
-        const handCardsDiv = document.getElementById("hand-cards");
-        handCardsDiv.innerHTML = ""; // Clear hand cards
+        document.getElementById("hand-cards").innerHTML = ""; // Clear hand cards
         selectedCard = null; // Reset selected card
     }
 
     // Toggle UI based on game state
     function toggleGameUI(isGameActive) {
-        const body = document.body;
+        console.log(`Toggling game UI: ${isGameActive}`); // Debugging
+        const joinSection = document.getElementById("join-section");
+        const playSection = document.getElementById("play-section");
+        const gameOverSection = document.getElementById("game-over-section");
+
         if (isGameActive) {
-            body.classList.add("in-game");
+            joinSection.style.display = "none";
+            playSection.style.display = "block";
+            gameOverSection.style.display = "none";
         } else {
-            body.classList.remove("in-game");
+            joinSection.style.display = "block";
+            playSection.style.display = "none";
+            gameOverSection.style.display = "none";
+        }
+    }
+
+    // Display "Searching for Game" message
+    function showSearchingMessage() {
+        const waitingMessage = document.getElementById("waiting-message");
+        if (waitingMessage) {
+            waitingMessage.innerText = "Searching for an opponent...";
+            waitingMessage.style.display = "block"; // Ensure it's visible
+        }
+    }
+
+    // Clear "Searching for Game" message
+    function clearSearchingMessage() {
+        const waitingMessage = document.getElementById("waiting-message");
+        if (waitingMessage) {
+            waitingMessage.innerText = "";
+            waitingMessage.style.display = "none"; // Hide it
         }
     }
 
     // Handle Join Game Button
     document.getElementById("join-btn").addEventListener("click", () => {
+        console.log("Join Game button clicked"); // Debugging
+        showSearchingMessage(); // Show "Searching for Game" message
         socket.emit("join");
     });
 
     // Handle "Waiting for Opponent" Message
     socket.on("waiting", (data) => {
+        console.log("Waiting for opponent:", data); // Debugging
         const waitingMessage = document.getElementById("waiting-message");
         if (waitingMessage) {
             waitingMessage.innerText = data.message;
@@ -40,15 +68,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle Game Start
     socket.on("game_start", (data) => {
-        console.log("Game started with players:", data.players);
+        console.log("Game started with players:", data.players); // Debugging
         resetGameUI(); // Clear previous game data
-        toggleGameUI(true); // Hide unnecessary elements
-        document.getElementById("join-section").style.display = "none"; // Hide the Join Game section
-        document.getElementById("play-section").style.display = "block"; // Show the play section
+        toggleGameUI(true); // Switch to game UI
+        clearSearchingMessage(); // Clear the "Searching for Game" message
     });
 
     // Handle Card Update
     socket.on("update_hand", (data) => {
+        console.log("Updating hand:", data.hand); // Debugging
         const handCardsDiv = document.getElementById("hand-cards");
         handCardsDiv.innerHTML = ""; // Clear previous cards
 
@@ -79,6 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle Prize Card Update
     socket.on("update_prize", (data) => {
+        console.log("Updating prize card:", data); // Debugging
         const prizeCardElement = document.getElementById("prize-card");
         const accumulatedPrizesElement = document.getElementById("accumulated-prizes");
 
@@ -93,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle Round Results
     socket.on("round_result", (data) => {
-        console.log("Round result received:", data);
+        console.log("Round result received:", data); // Debugging
 
         // Display round info
         const roundInfo = document.getElementById("round-info");
@@ -110,12 +139,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle Game Over
     socket.on("game_over", (data) => {
-        console.log("Game over. Winner:", data.winner);
+        console.log("Game over. Winner:", data.winner); // Debugging
 
         // Hide the play section
-        document.getElementById("play-section").style.display = "none";
+        toggleGameUI(false); // Switch to game-over state
 
-        // Show only the Game Over section with the return button
+        // Show only the Game Over section
         const gameOverSection = document.getElementById("game-over-section");
         gameOverSection.style.display = "block";
 
@@ -128,25 +157,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle Player Disconnect
     socket.on("player_disconnected", (data) => {
-        console.log(data.message);
+        console.log("Player disconnected:", data.message); // Debugging
         const gameOverMessage = document.getElementById("game-over-message");
         gameOverMessage.innerText = data.message;
-        document.getElementById("play-section").style.display = "none";
+        toggleGameUI(false); // Reset UI to pre-game state
         document.getElementById("game-over-section").style.display = "block";
     });
 
     // Return to Home Button
     document.getElementById("return-home-btn").addEventListener("click", () => {
-        toggleGameUI(false);
-        resetGameUI(); // Reset game messages
-        document.getElementById("join-section").style.display = "block"; // Show the Join Game section
-        document.getElementById("play-section").style.display = "none"; // Hide the play section
-        document.getElementById("game-over-section").style.display = "none"; // Hide the game over section
-        document.getElementById("waiting-message").innerText = ""; // Clear waiting message
+        console.log("Returning to home..."); // Debugging
+        resetGameUI(); // Clear game data
+        toggleGameUI(false); // Switch to pre-game UI
+        clearSearchingMessage(); // Clear the searching message
     });
 
     // Error handling
     socket.on("error", (data) => {
+        console.error("Error received:", data.message); // Debugging
         alert(data.message); // Display the error message in an alert
     });
 });
