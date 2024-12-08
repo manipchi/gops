@@ -5,48 +5,47 @@ body {
     background-color: #f9f9f9;
     margin: 0;
     padding: 0;
-    font-size: 1.2rem; /* Global scaling for better visibility */
 }
 
 /* Game Container */
 #game-container {
-    max-width: 600px; /* Larger container for mobile */
+    max-width: 500px;
     margin: 20px auto;
-    padding: 20px; /* Add padding for spaciousness */
+    padding: 10px;
 }
 
 /* Header */
 h1 {
     color: #37A908;
-    font-size: 3rem; /* Bigger header text */
-    margin-bottom: 20px;
+    font-size: 2rem;
+    margin-bottom: 10px;
 }
 
 /* Welcome Message */
 #welcome-message {
-    font-size: 1.5rem; /* Bigger welcome message */
-    margin-bottom: 20px;
+    font-size: 1rem;
+    margin-bottom: 15px;
 }
 
-/* Join Game Button Container */
+/* Join Game button container */
 #join-game-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 30px 0;
+    margin: 20px 0;
 }
 
 /* Ensure Join Game button is centered */
 #join-btn {
     display: block;
     margin: 0 auto;
-    padding: 20px 40px; /* Larger padding for touch devices */
-    font-size: 1.5rem; /* Bigger button text */
+    padding: 15px 30px; /* Adjust padding for a better look */
+    font-size: 1.2em;
     font-family: 'Roboto Mono', monospace;
     background-color: #37A908;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
@@ -54,19 +53,20 @@ h1 {
     background-color: #2e7a06;
 }
 
+
 /* Navigation Links */
 #nav-links {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 10px;
 }
 
 .nav-link {
     text-decoration: none;
-    font-size: 1.3rem; /* Bigger navigation text */
+    font-size: 0.9rem;
     color: #555;
-    padding: 10px 15px;
-    border-radius: 8px;
+    padding: 5px 10px;
+    border-radius: 5px;
     background-color: white;
     border: 1px solid #ccc;
     transition: all 0.3s ease-in-out;
@@ -79,31 +79,35 @@ h1 {
 
 /* Play Section */
 #play-section, #game-over-section {
-    margin-top: 30px;
-    padding: 30px;
+    margin-top: 20px;
+    padding: 20px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Leaderboard Styling */
+#leaderboard-container {
+    text-align: center;
+    margin: 0 auto;
+}
+
 .table-container {
-    margin: 30px auto;
-    width: 100%;
-    max-width: 700px; /* Ensure it fits wider screens */
-    overflow-x: auto;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 600px; /* Ensure it doesn't stretch too wide */
+    overflow-x: auto; /* Enable horizontal scrolling on smaller screens */
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin: 0 auto;
-    text-align: center;
-    font-size: 1.5rem; /* Bigger table text */
+    text-align: center; /* Center align text inside table cells */
 }
 
 th, td {
-    padding: 15px 20px;
+    padding: 10px;
     border: 1px solid #ddd;
 }
 
@@ -118,27 +122,60 @@ tr:nth-child(even) {
 }
 
 tr:hover {
-    background-color: #e0e0e0;
+    background-color: #e0e0e0; /* Subtle highlight on hover */
+}
+
+/* Back to Home Link Styling */
+.back-to-home {
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+.back-link {
+    color: #555;
+    text-decoration: none;
+    font-size: 1rem;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease-in-out;
+}
+
+.back-link:hover {
+    color: #37A908;
+    border-bottom: 1px solid #37A908;
+}
+
+/* Form Container */
+.form-container {
+    width: 90%;
+    max-width: 400px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Styled Form */
 .styled-form .form-group {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    text-align: left;
 }
 
 .styled-form label {
     display: block;
-    font-size: 1.3rem;
-    margin-bottom: 10px;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
     color: #555;
 }
 
 .styled-form input {
     width: 100%;
-    padding: 15px;
-    font-size: 1.3rem; /* Bigger inputs */
+    padding: 10px;
+    font-size: 1rem;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
 }
 
 .styled-form input:focus {
@@ -149,12 +186,12 @@ tr:hover {
 /* Form Buttons */
 .form-button {
     width: 100%;
-    padding: 15px;
-    font-size: 1.3rem;
+    padding: 10px;
+    font-size: 1rem;
     background-color: #37A908;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.1s;
 }
@@ -163,23 +200,101 @@ tr:hover {
     background-color: #2e7a06;
 }
 
+.form-button:active {
+    transform: scale(0.98);
+}
+
+/* Footer Links */
+.form-footer {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.form-footer a {
+    color: #37A908;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.form-footer a:hover {
+    color: #2e7a06;
+}
+
 /* Error Message Styling */
 .error-message {
-    font-size: 1.3rem;
-    padding: 15px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* General Button Styling */
+button {
+    font-family: 'Roboto Mono', monospace; /* Ensure consistent font */
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #37A908;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2e7a06;
+}
+
+button:active {
+    transform: scale(0.98); /* Slightly shrink button on click */
+}
+
+/* Specific Styling for Return Home Button */
+#return-home-btn {
+    display: inline-block;
+    text-align: center;
+    font-size: 1rem;
+    background-color: #37A908;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+#return-home-btn:hover {
+    background-color: #2e7a06;
+}
+
+#return-home-btn:active {
+    transform: scale(0.98);
+}
+
+/* Hide Unnecessary Elements During Gameplay */
+body.in-game #join-game-container,
+body.in-game #nav-links,
+body.in-game #welcome-message {
+    display: none;
 }
 
 /* Card Styling for Gameplay */
 .card {
     display: inline-block;
-    padding: 20px;
-    margin: 10px;
-    font-size: 2rem; /* Bigger card text */
+    padding: 15px;
+    margin: 5px;
+    font-size: 1rem;
     text-align: center;
     color: black;
     background-color: white;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.1s;
 }
@@ -192,38 +307,22 @@ tr:hover {
     background-color: #37A908;
     color: white;
     font-weight: bold;
-    transform: scale(1.1); /* Slightly larger for selected cards */
+    transform: scale(1.05);
 }
 
 /* Game Over Section */
 #game-over-section {
-    font-size: 1.5rem; /* Bigger game over message */
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 #game-over-message {
-    font-size: 1.8rem;
+    font-size: 1.2rem;
     color: #333;
     margin-bottom: 20px;
-}
-
-/* Media Query for Mobile Scaling */
-@media screen and (max-width: 768px) {
-    h1 {
-        font-size: 2.5rem;
-    }
-
-    .card {
-        width: 60px;
-        height: 90px;
-        font-size: 1.8rem;
-    }
-
-    button {
-        font-size: 1.2rem;
-        padding: 15px;
-    }
-
-    .large-text {
-        font-size: 1.8rem;
-    }
+    white-space: pre-line; /* Preserve line breaks for multi-line messages */
 }
