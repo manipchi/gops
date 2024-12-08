@@ -224,3 +224,80 @@ tr:hover {
     text-align: center;
     font-size: 0.9rem;
 }
+
+/* General Button Styling */
+button {
+    font-family: 'Roboto Mono', monospace; /* Ensure consistent font */
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #37A908;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2e7a06;
+}
+
+button:active {
+    transform: scale(0.98); /* Slightly shrink button on click */
+}
+
+/* Specific Styling for Return Home Button */
+#return-home-btn {
+    display: inline-block;
+    text-align: center;
+    font-size: 1rem;
+    background-color: #37A908;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+#return-home-btn:hover {
+    background-color: #2e7a06;
+}
+
+#return-home-btn:active {
+    transform: scale(0.98);
+}
+
+/* Hide Unnecessary Elements During Gameplay */
+body.in-game #join-game-container,
+body.in-game #nav-links,
+body.in-game #welcome-message {
+    display: none;
+}
+
+/* Card Styling for Gameplay */
+.card {
+    display: inline-block;
+    padding: 15px;
+    margin: 5px;
+    font-size: 1rem;
+    text-align: center;
+    color: black;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.card:hover {
+    background-color: #f0f0f0;
+}
+
+.card.selected {
+    background-color: #37A908;
+    color: white;
+    font-weight: bold;
+    transform: scale(1.05);
+}
