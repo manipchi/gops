@@ -15,20 +15,18 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedCard = null; // Reset selected card
     }
 
-    // Handle "Return to Home" Button
-    document.getElementById("return-home-btn").addEventListener("click", () => {
-        // Reset the UI to the original home page
-        resetGameUI();
-        document.getElementById("join-section").style.display = "block"; // Show the Join Game section
-        document.getElementById("play-section").style.display = "none"; // Hide the play section
-        document.getElementById("game-over-section").style.display = "none"; // Hide the game over section
-        const waitingMessage = document.getElementById("waiting-message");
-        if (waitingMessage) waitingMessage.innerText = ""; // Clear waiting message
-    });
+    // Toggle UI based on game state
+    function toggleGameUI(isGameActive) {
+        const body = document.body;
+        if (isGameActive) {
+            body.classList.add("in-game");
+        } else {
+            body.classList.remove("in-game");
+        }
+    }
 
     // Handle Join Game Button
     document.getElementById("join-btn").addEventListener("click", () => {
-        // Emit join event
         socket.emit("join");
     });
 
@@ -44,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.on("game_start", (data) => {
         console.log("Game started with players:", data.players);
         resetGameUI(); // Clear previous game data
+        toggleGameUI(true); // Hide unnecessary elements
         document.getElementById("join-section").style.display = "none"; // Hide the Join Game section
         document.getElementById("play-section").style.display = "block"; // Show the play section
     });
@@ -134,5 +133,20 @@ document.addEventListener("DOMContentLoaded", () => {
         gameOverMessage.innerText = data.message;
         document.getElementById("play-section").style.display = "none";
         document.getElementById("game-over-section").style.display = "block";
+    });
+
+    // Return to Home Button
+    document.getElementById("return-home-btn").addEventListener("click", () => {
+        toggleGameUI(false);
+        resetGameUI(); // Reset game messages
+        document.getElementById("join-section").style.display = "block"; // Show the Join Game section
+        document.getElementById("play-section").style.display = "none"; // Hide the play section
+        document.getElementById("game-over-section").style.display = "none"; // Hide the game over section
+        document.getElementById("waiting-message").innerText = ""; // Clear waiting message
+    });
+
+    // Error handling
+    socket.on("error", (data) => {
+        alert(data.message); // Display the error message in an alert
     });
 });
