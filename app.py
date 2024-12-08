@@ -268,18 +268,5 @@ def on_disconnect():
                 del games[room]
                 break
 
-@socketio.on('cancel')
-def on_cancel():
-    global waiting_player
-    username = current_user.username
-    sid = request.sid
-
-    # Check if this user is the waiting player
-    if waiting_player and waiting_player['sid'] == sid:
-        waiting_player = None  # Remove from the waiting queue
-        emit('search_cancelled', {'message': 'Search canceled.'}, to=sid)
-        print(f"User {username} canceled their search.")
-
-
 if __name__ == '__main__':
     socketio.run(app)

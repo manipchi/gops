@@ -3,7 +3,6 @@ const socket = io();
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM fully loaded and parsed."); // Debugging log
     let selectedCard = null;
-    let isSearching = false; // Track whether the user is currently searching for a game
 
     // Reset the game UI
     function resetGameUI() {
@@ -56,22 +55,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (joinBtn) {
         console.log("Join Game button found. Adding event listener.");
         joinBtn.addEventListener("click", () => {
-            if (!isSearching) {
-                // Start searching for a game
-                console.log("Join Game button clicked. Starting search...");
-                socket.emit("join");
-                joinBtn.textContent = "Cancel Search"; // Change button text
-                showSearchingMessage(); // Show "Searching for Opponent" message
-                toggleSections({ showJoin: false, showPlay: false, showGameOver: false });
-                isSearching = true; // Update state
-            } else {
-                // Cancel the search
-                console.log("Cancel Search button clicked.");
-                socket.emit("cancel"); // Emit cancel event to the server
-                joinBtn.textContent = "Join Game"; // Revert button text
-                clearSearchingMessage(); // Clear the searching message
-                isSearching = false; // Update state
-            }
+            console.log("Join Game button clicked. Emitting 'join' event.");
+            showSearchingMessage(); // Show "Searching for Opponent" message
+            toggleSections({ showJoin: false, showPlay: false, showGameOver: false });
+            socket.emit("join");
         });
     } else {
         console.error("Join Game button not found in DOM.");
@@ -92,8 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
         resetGameUI();
         clearSearchingMessage(); // Clear "Searching for Opponent" message
         toggleSections({ showJoin: false, showPlay: true, showGameOver: false }); // Show the game UI
-        isSearching = false; // Reset search state
-        joinBtn.textContent = "Join Game"; // Reset button text
     });
 
     // Handle "update_hand" event
