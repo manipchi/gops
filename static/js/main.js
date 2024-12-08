@@ -106,12 +106,23 @@ document.addEventListener("DOMContentLoaded", () => {
     // Handle Game Over
     socket.on("game_over", (data) => {
         console.log("Game over. Winner:", data.winner);
-        toggleGameUI(false); // Reset UI to pre-game state
 
+        // Hide the play section and unnecessary buttons
+        document.getElementById("play-section").style.display = "none";
+        document.getElementById("join-game-container").style.display = "none";
+        document.getElementById("nav-links").style.display = "none";
+
+        // Show only the Game Over section with the return button
+        const gameOverSection = document.getElementById("game-over-section");
+        gameOverSection.style.display = "block";
+
+        // Update the game over message
         const gameOverMessage = document.getElementById("game-over-message");
-        gameOverMessage.innerText = `Game Over! Winner: ${data.winner}`;
-        document.getElementById("game-over-section").style.display = "block";
+        gameOverMessage.innerText = `Game Over! Winner: ${data.winner}\nFinal Scores: ${Object.entries(data.final_scores)
+            .map(([player, score]) => `${player}: ${score}`)
+            .join(", ")}`;
     });
+
 
     // Handle Player Disconnect
     socket.on("player_disconnected", (data) => {
