@@ -27,14 +27,21 @@ h1 {
     margin-bottom: 15px;
 }
 
-/* Join Game Button */
+/* Join Game button container */
 #join-game-container {
-    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
 }
 
+/* Ensure Join Game button is centered */
 #join-btn {
-    font-size: 1rem;
-    padding: 8px 20px;
+    display: block;
+    margin: 0 auto;
+    padding: 15px 30px; /* Adjust padding for a better look */
+    font-size: 1.2em;
+    font-family: 'Roboto Mono', monospace;
     background-color: #37A908;
     color: white;
     border: none;
@@ -45,6 +52,7 @@ h1 {
 #join-btn:hover {
     background-color: #2e7a06;
 }
+
 
 /* Navigation Links */
 #nav-links {
