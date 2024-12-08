@@ -301,3 +301,20 @@ body.in-game #welcome-message {
     font-weight: bold;
     transform: scale(1.05);
 }
+
+/* Game Over Section */
+#game-over-section {
+    text-align: center;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#game-over-message {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 20px;
+    white-space: pre-line; /* Preserve line breaks for multi-line messages */
+}
