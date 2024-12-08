@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Display "Searching for Game" message
+    // Display "Searching for Opponent" message
     function showSearchingMessage() {
         const waitingMessage = document.getElementById("waiting-message");
         if (waitingMessage) {
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Clear "Searching for Game" message
+    // Clear "Searching for Opponent" message
     function clearSearchingMessage() {
         const waitingMessage = document.getElementById("waiting-message");
         if (waitingMessage) {
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("join-btn").addEventListener("click", () => {
         console.log("Join Game button clicked"); // Debugging
         showSearchingMessage(); // Show "Searching for Game" message
-        socket.emit("join");
+        socket.emit("join"); // Emit join event
     });
 
     // Handle "Waiting for Opponent" Message
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Game started with players:", data.players); // Debugging
         resetGameUI(); // Clear previous game data
         toggleGameUI(true); // Switch to game UI
-        clearSearchingMessage(); // Clear the "Searching for Game" message
+        clearSearchingMessage(); // Clear the "Searching for Opponent" message
     });
 
     // Handle Card Update
@@ -118,23 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (accumulatedPrizesElement) {
             accumulatedPrizesElement.innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(", ")}`;
         }
-    });
-
-    // Handle Round Results
-    socket.on("round_result", (data) => {
-        console.log("Round result received:", data); // Debugging
-
-        // Display round info
-        const roundInfo = document.getElementById("round-info");
-        roundInfo.textContent = `${data.message} Opponent played ${data.opponent_card}.`;
-
-        // Update scores
-        const scoresElement = document.getElementById("scores");
-        let scoresText = "Scores: ";
-        for (const [player, score] of Object.entries(data.scores)) {
-            scoresText += `${player}: ${score} `;
-        }
-        scoresElement.textContent = scoresText.trim();
     });
 
     // Handle Game Over

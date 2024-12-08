@@ -102,7 +102,7 @@ def on_join():
     global waiting_player
     username = current_user.username
     sid = request.sid  # Get the session ID of the player
-
+    print(f"Join event received for user: {current_user.username}")
     if waiting_player and waiting_player['sid'] == sid:
         emit('error', {'message': 'You cannot join a game against yourself.'}, to=sid)
         return
