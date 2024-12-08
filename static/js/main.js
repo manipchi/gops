@@ -17,9 +17,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Toggle visibility of game sections
     function toggleSections({ showJoin = false, showPlay = false, showGameOver = false }) {
-        document.getElementById("join-section").style.display = showJoin ? "block" : "none";
-        document.getElementById("play-section").style.display = showPlay ? "block" : "none";
-        document.getElementById("game-over-section").style.display = showGameOver ? "block" : "none";
+        const joinSection = document.getElementById("join-section");
+        const playSection = document.getElementById("play-section");
+        const gameOverSection = document.getElementById("game-over-section");
+
+        if (joinSection) joinSection.style.display = showJoin ? "block" : "none";
+        if (playSection) playSection.style.display = showPlay ? "block" : "none";
+        if (gameOverSection) gameOverSection.style.display = showGameOver ? "block" : "none";
     }
 
     // Show "Searching for Opponent" message
@@ -40,12 +44,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Handle "Join Game" button click
     const joinBtn = document.getElementById("join-btn");
     if (joinBtn) {
         console.log("Join Game button found. Adding event listener.");
         joinBtn.addEventListener("click", () => {
             console.log("Join Game button clicked, emitting 'join' event.");
-            showSearchingMessage(); // Show "Searching for Opponent" message
+            showSearchingMessage();
             toggleSections({ showJoin: false, showPlay: false, showGameOver: false });
             socket.emit("join");
         });
@@ -65,8 +70,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Handle "game_start" event
     socket.on("game_start", (data) => {
         console.log("Game started with players:", data.players);
-        resetGameUI(); // Clear previous game data
-        clearSearchingMessage(); // Clear the "Searching for Opponent" message
+        resetGameUI();
+        clearSearchingMessage();
         toggleSections({ showJoin: false, showPlay: true, showGameOver: false });
     });
 
@@ -108,6 +113,20 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("accumulated-prizes").innerText = `Accumulated Prizes: ${data.accumulated_prizes.join(", ")}`;
     });
 
+    // Handle "round_result" event
+    socket.on("round_result", (data) => {
+        console.log("Round result received:", data);
+        const roundInfo = document.getElementById("round-info");
+        roundInfo.textContent = `${data.message} Opponent played ${data.opponent_card}.`;
+
+        const scoresElement = document.getElementById("scores");
+        let scoresText = "Scores: ";
+        for (const [player, score] of Object.entries(data.scores)) {
+            scoresText += `${player}: ${score} `;
+        }
+        scoresElement.textContent = scoresText.trim();
+    });
+
     // Handle "game_over" event
     socket.on("game_over", (data) => {
         console.log("Game over. Winner:", data.winner);
@@ -129,11 +148,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Handle "Return to Home" button click
-    document.getElementById("return-home-btn").addEventListener("click", () => {
-        console.log("Returning to home...");
-        resetGameUI();
-        toggleSections({ showJoin: true, showPlay: false, showGameOver: false });
-    });
+    const returnHomeBtn = document.getElementById("return-home-btn");
+    if (returnHomeBtn) {
+        returnHomeBtn.addEventListener("click", () => {
+            console.log("Returning to home...");
+            resetGameUI();
+            toggleSections({ showJoin: true, showPlay: false, showGameOver: false });
+        });
+    }
 
     // Handle error messages
     socket.on("error", (data) => {
@@ -141,11 +163,12 @@ document.addEventListener("DOMContentLoaded", () => {
         alert(data.message);
     });
 
+    // Debugging socket connection
     socket.on("connect", () => {
-        console.log("Socket connected with ID:", socket.id); // Debugging log
+        console.log("Socket connected with ID:", socket.id);
     });
+
     socket.on("disconnect", () => {
-        console.log("Socket disconnected."); // Debugging log
+        console.log("Socket disconnected.");
     });
-    
 });
