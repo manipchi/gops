@@ -17,17 +17,18 @@
                 {% if current_user.is_authenticated %}
                 <p id="welcome-message" style="font-size: 1.2rem; margin-bottom: 20px;">Welcome, {{ current_user.username }}! Elo: {{ current_user.elo }}</p> <!-- Adjusted font size and spacing -->
                 <div id="join-game-container" style="margin-bottom: 20px;">
-                    <button id="join-btn" style="font-size: 1.5rem; padding: 15px 30px; background-color: #37A908; color: white; border: none; border-radius: 5px;">Join Game</button> <!-- Styled button -->
+                    <!-- Removed inline styles and preserved button functionality -->
+                    <button id="join-btn" class="form-button">Join Game</button>
                 </div>
                 <nav id="nav-links" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
-                    <a href="{{ url_for('logout') }}" class="nav-link" style="font-size: 1.2rem; text-decoration: none; color: #37A908;">Logout</a>
-                    <a href="{{ url_for('leaderboard') }}" class="nav-link" style="font-size: 1.2rem; text-decoration: none; color: #37A908;">Leaderboard</a>
+                    <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                    <a href="{{ url_for('leaderboard') }}" class="nav-link">Leaderboard</a>
                 </nav>
                 {% else %}
                 <nav id="nav-links" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
-                    <a href="{{ url_for('login') }}" class="nav-link" style="font-size: 1.2rem; text-decoration: none; color: #37A908;">Login</a>
-                    <a href="{{ url_for('register') }}" class="nav-link" style="font-size: 1.2rem; text-decoration: none; color: #37A908;">Register</a>
-                    <a href="{{ url_for('leaderboard') }}" class="nav-link" style="font-size: 1.2rem; text-decoration: none; color: #37A908;">Leaderboard</a>
+                    <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                    <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+                    <a href="{{ url_for('leaderboard') }}" class="nav-link">Leaderboard</a>
                 </nav>
                 {% endif %}
             </section>
