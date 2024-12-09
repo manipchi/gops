@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added for responsiveness -->
     <title>Register</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
@@ -9,32 +10,32 @@
 <body class="large-text">
     <div id="register-container" class="full-width">
         <header>
-            <h1>Register</h1>
+            <h1 style="font-size: 2.5rem; margin-bottom: 20px;">Register</h1> <!-- Increased font size -->
         </header>
         <main>
-            <section class="form-container">
+            <section class="form-container" style="padding: 30px; max-width: 90%;"> <!-- Increased padding and adjusted width -->
                 {% if error %}
-                <p class="error-message">{{ error }}</p>
+                <p class="error-message" style="font-size: 1.2rem;">{{ error }}</p> <!-- Increased error message font size -->
                 {% endif %}
                 <form method="post" class="styled-form">
                     <div class="form-group">
-                        <label for="username">Username:</label>
-                        <input type="text" name="username" id="username" placeholder="Choose a username" required>
+                        <label for="username" style="font-size: 1.2rem;">Username:</label> <!-- Increased label font size -->
+                        <input type="text" name="username" id="username" placeholder="Choose a username" required style="font-size: 1.2rem; padding: 12px;"> <!-- Increased input font size and padding -->
                     </div>
 
                     <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" name="email" id="email" placeholder="Enter your email" required>
+                        <label for="email" style="font-size: 1.2rem;">Email:</label> <!-- Increased label font size -->
+                        <input type="email" name="email" id="email" placeholder="Enter your email" required style="font-size: 1.2rem; padding: 12px;"> <!-- Increased input font size and padding -->
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" name="password" id="password" placeholder="Create a password" required>
+                        <label for="password" style="font-size: 1.2rem;">Password:</label> <!-- Increased label font size -->
+                        <input type="password" name="password" id="password" placeholder="Create a password" required style="font-size: 1.2rem; padding: 12px;"> <!-- Increased input font size and padding -->
                     </div>
 
-                    <button type="submit" class="form-button">Register</button>
+                    <button type="submit" class="form-button" style="font-size: 1.5rem; padding: 15px 30px;">Register</button> <!-- Increased button font size and padding -->
                 </form>
-                <p class="form-footer">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+                <p class="form-footer" style="font-size: 1.2rem;">Already have an account? <a href="{{ url_for('login') }}" style="font-size: 1.2rem;">Login</a></p> <!-- Increased footer font size -->
             </section>
         </main>
     </div>

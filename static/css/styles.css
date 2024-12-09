@@ -12,6 +12,9 @@ body {
     max-width: 500px;
     margin: 20px auto;
     padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Header */
@@ -27,7 +30,7 @@ h1 {
     margin-bottom: 15px;
 }
 
-/* Join Game button container */
+/* Join Game Button Container */
 #join-game-container {
     display: flex;
     justify-content: center;
@@ -35,7 +38,7 @@ h1 {
     margin: 20px 0;
 }
 
-/* Ensure Join Game button is centered */
+/* Ensure Join Game Button is Centered */
 #join-btn {
     display: block;
     margin: 0 auto;
@@ -47,12 +50,16 @@ h1 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
 }
 
 #join-btn:hover {
     background-color: #2e7a06;
 }
 
+#join-btn:active {
+    transform: scale(0.98);
+}
 
 /* Navigation Links */
 #nav-links {
@@ -77,7 +84,7 @@ h1 {
     color: white;
 }
 
-/* Play Section */
+/* Play and Game Over Sections */
 #play-section, #game-over-section {
     margin-top: 20px;
     padding: 20px;
@@ -144,147 +151,7 @@ tr:hover {
     border-bottom: 1px solid #37A908;
 }
 
-/* Form Container */
-.form-container {
-    width: 90%;
-    max-width: 400px;
-    margin: 20px auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Styled Form */
-.styled-form .form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
-.styled-form label {
-    display: block;
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-    color: #555;
-}
-
-.styled-form input {
-    width: 100%;
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
-    transition: border-color 0.3s;
-}
-
-.styled-form input:focus {
-    border-color: #37A908;
-    outline: none;
-}
-
-/* Form Buttons */
-.form-button {
-    width: 100%;
-    padding: 10px;
-    font-size: 1rem;
-    background-color: #37A908;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
-}
-
-.form-button:hover {
-    background-color: #2e7a06;
-}
-
-.form-button:active {
-    transform: scale(0.98);
-}
-
-/* Footer Links */
-.form-footer {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    text-align: center;
-}
-
-.form-footer a {
-    color: #37A908;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.form-footer a:hover {
-    color: #2e7a06;
-}
-
-/* Error Message Styling */
-.error-message {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    text-align: center;
-    font-size: 0.9rem;
-}
-
-/* General Button Styling */
-button {
-    font-family: 'Roboto Mono', monospace; /* Ensure consistent font */
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #37A908;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #2e7a06;
-}
-
-button:active {
-    transform: scale(0.98); /* Slightly shrink button on click */
-}
-
-/* Specific Styling for Return Home Button */
-#return-home-btn {
-    display: inline-block;
-    text-align: center;
-    font-size: 1rem;
-    background-color: #37A908;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
-}
-
-#return-home-btn:hover {
-    background-color: #2e7a06;
-}
-
-#return-home-btn:active {
-    transform: scale(0.98);
-}
-
-/* Hide Unnecessary Elements During Gameplay */
-body.in-game #join-game-container,
-body.in-game #nav-links,
-body.in-game #welcome-message {
-    display: none;
-}
-
-/* Card Styling for Gameplay */
+/* Cards */
 .card {
     display: inline-block;
     padding: 15px;
@@ -310,19 +177,127 @@ body.in-game #welcome-message {
     transform: scale(1.05);
 }
 
-/* Game Over Section */
-#game-over-section {
-    text-align: center;
-    margin-top: 20px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+/* Buttons */
+button {
+    font-family: 'Roboto Mono', monospace;
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #37A908;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-#game-over-message {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 20px;
-    white-space: pre-line; /* Preserve line breaks for multi-line messages */
+button:hover {
+    background-color: #2e7a06;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Return Home Button */
+#return-home-btn {
+    display: inline-block;
+    text-align: center;
+    font-size: 1rem;
+    background-color: #37A908;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+#return-home-btn:hover {
+    background-color: #2e7a06;
+}
+
+#return-home-btn:active {
+    transform: scale(0.98);
+}
+
+/* Error Messages */
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    #game-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 10px;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    #welcome-message {
+        font-size: 0.9rem;
+    }
+
+    #join-btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+
+    #nav-links {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .nav-link {
+        font-size: 0.8rem;
+        padding: 5px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .card {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    #game-over-message {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 400px) {
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    #join-btn {
+        font-size: 0.9rem;
+        padding: 8px 15px;
+    }
+
+    #nav-links .nav-link {
+        font-size: 0.7rem;
+        padding: 4px;
+    }
+
+    .card {
+        font-size: 0.8rem;
+        padding: 8px;
+        margin: 3px;
+    }
 }

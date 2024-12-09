@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added for responsiveness -->
     <title>Leaderboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
@@ -9,31 +10,31 @@
 <body class="large-text">
     <div id="leaderboard-container" class="full-width">
         <header>
-            <h1>Leaderboard</h1>
+            <h1 style="font-size: 2.5rem; margin-bottom: 20px;">Leaderboard</h1> <!-- Increased font size -->
         </header>
         <main>
-            <section class="table-container">
-                <table>
+            <section class="table-container" style="padding: 20px; max-width: 90%; overflow-x: auto;"> <!-- Added responsive adjustments -->
+                <table style="font-size: 1.2rem; width: 100%;"> <!-- Increased font size -->
                     <thead>
                         <tr>
-                            <th>Rank</th>
-                            <th>Username</th>
-                            <th>Elo</th>
+                            <th style="padding: 10px;">Rank</th> <!-- Adjusted padding -->
+                            <th style="padding: 10px;">Username</th> <!-- Adjusted padding -->
+                            <th style="padding: 10px;">Elo</th> <!-- Adjusted padding -->
                         </tr>
                     </thead>
                     <tbody>
                         {% for user in users %}
                         <tr>
-                            <td>{{ loop.index }}</td>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.elo }}</td>
+                            <td style="padding: 10px;">{{ loop.index }}</td> <!-- Adjusted padding -->
+                            <td style="padding: 10px;">{{ user.username }}</td> <!-- Adjusted padding -->
+                            <td style="padding: 10px;">{{ user.elo }}</td> <!-- Adjusted padding -->
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </section>
-            <p class="back-to-home">
-                <a href="{{ url_for('index') }}" class="back-link">Back to Home</a>
+            <p class="back-to-home" style="margin-top: 20px; font-size: 1.2rem;"> <!-- Increased font size -->
+                <a href="{{ url_for('index') }}" class="back-link" style="font-size: 1.2rem;">Back to Home</a> <!-- Increased font size -->
             </p>
         </main>
     </div>
