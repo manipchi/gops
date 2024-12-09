@@ -2,54 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added for responsiveness -->
     <title>Goofspiel Online</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body class="large-text">
-    <div id="game-container" class="full-width">
-        <header> 
-            <h1>Goofspiel</h1>
-            {% if current_user.is_authenticated %}
-                <script>console.log("User is authenticated.");</script>
-                <p id="welcome-message">Welcome, {{ current_user.username }}! Elo: {{ current_user.elo }}</p>
-                <div id="join-game-container">
-                    <button id="join-btn">Join Game</button>
-                    <p id="waiting-message" style="display: none;"></p>
-                </div>
-                <nav id="nav-links">
-                    <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
-                    <a href="{{ url_for('leaderboard') }}" class="nav-link">Leaderboard</a>
-                </nav>
-            {% else %}
-                <script>console.log("User is not authenticated.");</script>
-                <nav id="nav-links">
-                    <a href="{{ url_for('login') }}" class="nav-link">Login</a>
-                    <a href="{{ url_for('register') }}" class="nav-link">Register</a>
-                    <a href="{{ url_for('leaderboard') }}" class="nav-link">Leaderboard</a>
-                </nav>
-            {% endif %}
+<body class="large-text" style="background-color: #f9f9f9;"> <!-- Changed body background color -->
+    <div id="game-container" style="max-width: 600px; margin: 20px auto; padding: 20px; background-color: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"> <!-- Added max-width and centered content -->
+        <header>
+            <h1 style="font-size: 2.5rem; margin-bottom: 20px;">Goofspiel</h1> <!-- Increased font size -->
         </header>
-
         <main>
-            <section id="play-section" style="display: none;">
-                <p id="prize-card">Prize Card: </p>
-                <p id="accumulated-prizes">Accumulated Prizes: None</p>
-                <p id="your-hand">Your Hand: </p>
-                <div id="hand-cards"></div>
-                <p id="round-info"></p>
-                <p id="scores"></p>
-            </section>
-
-            <section id="game-over-section" style="display: none;">
-                <p id="game-over-message"></p>
-                <button id="return-home-btn" data-home-url="{{ url_for('index') }}">Return to Home</button>
+            <section id="join-game-section">
+                {% if current_user.is_authenticated %}
+                <p id="welcome-message" style="font-size: 1.2rem; margin-bottom: 20px;">Welcome, {{ current_user.username }}! Elo: {{ current_user.elo }}</p> <!-- Adjusted font size and spacing -->
+                <div id="join-game-container" style="margin-bottom: 20px;">
+                    <button id="join-btn" style="font-size: 1.5rem; padding: 15px 30px; background-color: #37A908; color: white; border: none; border-radius: 5px;">Join Game</button> <!-- Styled button -->
+                </div>
+                <nav id="nav-links" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                    <a href="{{ url_for('logout') }}" class="nav-link" style="font-size: 1.2rem; text-decoration: none; color: #37A908;">Logout</a>
+                    <a href="{{ url_for('leaderboard') }}" class="nav-link" style="font-size: 1.2rem; text-decoration: none; color: #37A908;">Leaderboard</a>
+                </nav>
+                {% else %}
+                <nav id="nav-links" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                    <a href="{{ url_for('login') }}" class="nav-link" style="font-size: 1.2rem; text-decoration: none; color: #37A908;">Login</a>
+                    <a href="{{ url_for('register') }}" class="nav-link" style="font-size: 1.2rem; text-decoration: none; color: #37A908;">Register</a>
+                    <a href="{{ url_for('leaderboard') }}" class="nav-link" style="font-size: 1.2rem; text-decoration: none; color: #37A908;">Leaderboard</a>
+                </nav>
+                {% endif %}
             </section>
         </main>
     </div>
-
-    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

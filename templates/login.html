@@ -20,14 +20,14 @@
                 <form method="post" class="styled-form">
                     <div class="form-group">
                         <label for="username" style="font-size: 1.2rem;">Username:</label> <!-- Increased label font size -->
-                        <input type="text" name="username" id="username" placeholder="Enter your username" required style="font-size: 1.2rem; padding: 12px;"> <!-- Increased input font size and padding -->
+                        <input type="text" name="username" id="username" placeholder="Enter your username" required style="font-size: 1.2rem; padding: 12px; font-family: 'Roboto Mono', monospace;"> <!-- Styled input font -->
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="password" style="font-size: 1.2rem;">Password:</label> <!-- Increased label font size -->
-                        <input type="password" name="password" id="password" placeholder="Enter your password" required style="font-size: 1.2rem; padding: 12px;"> <!-- Increased input font size and padding -->
+                        <input type="password" name="password" id="password" placeholder="Enter your password" required style="font-size: 1.2rem; padding: 12px; font-family: 'Roboto Mono', monospace;"> <!-- Styled input font -->
                     </div>
-                    
+
                     <button type="submit" class="form-button" style="font-size: 1.5rem; padding: 15px 30px;">Login</button> <!-- Increased button font size and padding -->
                 </form>
                 <p class="form-footer" style="font-size: 1.2rem;">Don't have an account? <a href="{{ url_for('register') }}" style="font-size: 1.2rem;">Register</a></p> <!-- Increased footer font size -->
